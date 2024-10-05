@@ -1,5 +1,8 @@
 service:
+  name:
+  description:
   host: 127.0.0.1
   port: 4000
   protocol: http
   baseUrl: /api
+  docsUrl: /docs
