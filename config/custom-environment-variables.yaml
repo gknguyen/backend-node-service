@@ -1,0 +1,7 @@
+service:
+  host: SERVICE_HOST
+  port:
+    __name: SERVICE_PORT
+    __format: json
+  protocol: SERVICE_PROTOCOL
+  baseUrl: SERVICE_BASE_URL
