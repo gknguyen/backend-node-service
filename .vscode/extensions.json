@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "abhijoybasak.nestjs-files",
+    "esbenp.prettier-vscode"
+  ]
+}
