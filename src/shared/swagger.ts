@@ -8,8 +8,7 @@ import { getServerHostName } from './utils';
 
 export function getSwaggerDocument(app: INestApplication) {
   const name = ENV.SERVICE.NAME || 'Service';
-  const description =
-    ENV.SERVICE.DESCRIPTION || 'API specification for the service';
+  const description = ENV.SERVICE.DESCRIPTION || 'API specification for the service';
 
   const config = new DocumentBuilder()
     .setTitle(`${name} API spec`)
