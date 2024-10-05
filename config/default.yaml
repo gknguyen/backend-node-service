@@ -6,3 +6,14 @@ service:
   protocol: http
   baseUrl: /api
   docsUrl: /docs
+
+pino:
+  level: debug
+  enabled: true
+  colorEnabled: true
+  prettyEnabled: true
+  redact:
+    enabled: true
+    censor: '******'
+    paths:
+      - '*.headers["access-token"]'

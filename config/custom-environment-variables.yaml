@@ -8,3 +8,23 @@ service:
   protocol: SERVICE_PROTOCOL
   baseUrl: SERVICE_BASE_URL
   docsUrl: SERVICE_DOCS_URL
+
+pino:
+  level: PINO_LOG_LEVEL
+  enabled:
+    __name: PINO_LOG_ENABLED
+    __format: json
+  colorEnabled:
+    __name: PINO_COLOR_ENABLED
+    __format: json
+  prettyEnabled:
+    __name: PINO_PRETTY_ENABLED
+    __format: json
+  redact:
+    enabled:
+      __name: PINO_REDACT_ENABLED
+      __format: json
+    censor: PINO_REDACT_CENSOR
+    paths:
+      __name: PINO_REDACT_PATHS
+      __format: json
