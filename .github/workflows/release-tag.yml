@@ -21,7 +21,8 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     permissions:
-      contents: write
+      contents: read
+      issues: write
 
     steps:
       - name: Checkout the repository
