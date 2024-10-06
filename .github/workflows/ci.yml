@@ -8,5 +8,5 @@ on:
 jobs:
   ci:
     name: Continue Integration
-    uses: ./.github/workflows/jobs/check-version.yml
+    uses: ./.github/workflows/check-version.yml
     secrets: inherit
