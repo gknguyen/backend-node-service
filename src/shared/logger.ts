@@ -1,13 +1,14 @@
-import { Logger } from 'src/packages/logger';
 import ENV from './env';
+import { Logger } from 'src/packages/logger';
+import { LoggerType } from 'src/packages/logger/shared/const';
 
 export const logger = new Logger({
-  level: ENV.PINO.LEVEL,
-  enabled: ENV.PINO.ENABLED,
-  colorEnabled: ENV.PINO.COLOR_ENABLED,
-  prettyEnabled: ENV.PINO.PRETTY_ENABLED,
+  enabled: ENV.LOGGER.ENABLED,
+  colorEnabled: ENV.LOGGER.COLOR_ENABLED,
+  prettyEnabled: ENV.LOGGER.PRETTY_ENABLED,
   redact: {
-    paths: ENV.PINO.REDACT.PATHS,
-    censor: ENV.PINO.REDACT.CENSOR,
+    enabled: ENV.LOGGER.REDACT.ENABLED,
+    paths: ENV.LOGGER.REDACT.PATHS,
+    censor: ENV.LOGGER.REDACT.CENSOR,
   },
-});
+}).get(LoggerType.Winston);

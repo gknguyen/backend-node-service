@@ -1,5 +1,3 @@
-import { Level } from 'pino';
-
 export interface ILoggerRedactConfig {
   enabled?: boolean;
   paths: string[];
@@ -17,15 +15,10 @@ export interface ILoggerTransportConfig {
 }
 
 export interface ILoggerConfig {
-  level?: Level;
+  level?: string;
   enabled?: boolean;
   colorEnabled?: boolean;
   prettyEnabled?: boolean;
   redact?: ILoggerRedactConfig;
   transport?: ILoggerTransportConfig;
-}
-
-export interface ILogInput {
-  methodName?: string;
-  [x: string]: any;
 }

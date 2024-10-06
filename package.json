@@ -42,7 +42,8 @@
     "pino-pretty": "^11.2.2",
     "reflect-metadata": "^0.1.14",
     "rxjs": "^7.2.0",
-    "string-template": "^1.0.0"
+    "string-template": "^1.0.0",
+    "winston": "^3.15.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
