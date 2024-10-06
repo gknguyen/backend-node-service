@@ -1,0 +1,12 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - 'release/*'
+
+jobs:
+  ci:
+    name: Continue Integration
+    uses: ./.github/workflows/jobs/check-version.yml
+    secrets: inherit

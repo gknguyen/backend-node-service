@@ -1,0 +1,41 @@
+name: Release Tag
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: false
+        type: string
+        description: 'The tag to be created'
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  release-tag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Get version from package.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "Version from package.json: $VERSION"
+          echo "::set-output name=version::$VERSION"
+
+      - name: Create the tag
+        id: create_tag
+        run: |
+          TAG="${{ inputs.tag || steps.get_version.outputs.version }}"
+          echo "Creating tag: $TAG"
+          git tag $TAG
+          git push origin $TAG
+
+      - name: Confirm the created tag
+        run: |
+          git fetch --tags
+          echo "The created tag is: $(git describe --tags)"
