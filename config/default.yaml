@@ -20,4 +20,3 @@ logger:
       - '*.headers["access-token"]'
       - password
       - secret
-      - 'access-token'

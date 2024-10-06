@@ -2,7 +2,7 @@ import ENV from './env';
 import { Logger } from 'src/packages/logger';
 import { LoggerType } from 'src/packages/logger/shared/const';
 
-export const logger = new Logger({
+export const logger = new Logger(LoggerType.Pino, {
   enabled: ENV.LOGGER.ENABLED,
   colorEnabled: ENV.LOGGER.COLOR_ENABLED,
   prettyEnabled: ENV.LOGGER.PRETTY_ENABLED,
@@ -11,4 +11,4 @@ export const logger = new Logger({
     paths: ENV.LOGGER.REDACT.PATHS,
     censor: ENV.LOGGER.REDACT.CENSOR,
   },
-}).get(LoggerType.Winston);
+});

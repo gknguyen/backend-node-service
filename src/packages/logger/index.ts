@@ -1,18 +1,81 @@
-import { PinoLogger } from './pino';
 import { LOGGER_TYPE_MAPPER, LoggerType } from './shared/const';
-import { IBaseLoggerOptions } from './shared/interface';
-import { WinstonLogger } from './winston';
+import { IBaseLogger, IBaseLoggerOptions, ILogInput } from './shared/interface';
+import { Request, Response } from 'express';
+import { formatResBodyString, getUserId } from './shared/utils';
+import format from 'string-template';
 
-export class Logger {
+export class Logger implements IBaseLogger {
+  logger: IBaseLogger;
   options: IBaseLoggerOptions;
 
-  constructor(options: IBaseLoggerOptions) {
+  constructor(type: LoggerType, options: IBaseLoggerOptions) {
     this.options = options;
+    this.logger = new LOGGER_TYPE_MAPPER[type](this.options);
   }
 
-  get(type: LoggerType.Pino): PinoLogger;
-  get(type: LoggerType.Winston): WinstonLogger;
-  get(type: LoggerType): PinoLogger | WinstonLogger {
-    return new LOGGER_TYPE_MAPPER[type](this.options);
+  info(message: string, data?: ILogInput): void {
+    this.logger.info(message, data);
+  }
+  debug(message: string, data?: ILogInput): void {
+    this.logger.debug(message, data);
+  }
+  warn(message: string, data?: ILogInput): void {
+    this.logger.warn(message, data);
+  }
+  error(message: string, data?: ILogInput): void {
+    this.logger.error(message, data);
+  }
+  fatal(message: string, data?: ILogInput): void {
+    this.logger.fatal(message, data);
+  }
+
+  httpLog(req: Request & { timestamp?: number }, res: Response) {
+    const elapsedStart = req.timestamp ?? 0;
+    const elapsedEnd = Date.now();
+    const processTime = format('{0}ms', [elapsedStart > 0 ? elapsedEnd - elapsedStart : 0]);
+    res.setHeader('x-process-time', processTime);
+
+    const rawResponse = res.write;
+    const rawResponseEnd = res.end;
+    const chunks: Buffer[] = [];
+
+    res.write = (...args: any[]) => {
+      const restArgs: any = [];
+      for (let i = 0; i < args.length; i++) restArgs[i] = args[i];
+      chunks.push(Buffer.from(restArgs[0]));
+      rawResponse.apply(res, restArgs);
+      return true;
+    };
+
+    res.end = (...args: any[]) => {
+      const restArgs: any = [];
+      for (let i = 0; i < args.length; i++) restArgs[i] = args[i];
+      if (restArgs[0]) chunks.push(Buffer.from(restArgs[0]));
+      const body = Buffer.concat(chunks).toString('utf8');
+      const payload = {
+        userId: getUserId(),
+        timestamp: new Date().toISOString(),
+        processTime,
+        request: {
+          headers: req.headers,
+          body: req.body,
+          clientIP: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+          userAgent: req.headers['user-agent'],
+          originalUri: req.originalUrl,
+          uri: req.url,
+          method: req.method,
+        },
+        response: {
+          headers: res.getHeaders(),
+          body: formatResBodyString(body),
+          statusCode: res.statusCode,
+        },
+      };
+      if (res.statusCode >= 200 && res.statusCode <= 400)
+        this.debug(`HTTP Success Log [${res.statusCode}]`, payload);
+      else this.error(`HTTP Error Log [${res.statusCode}]`, payload);
+      rawResponseEnd.apply(res, restArgs);
+      return res;
+    };
   }
 }

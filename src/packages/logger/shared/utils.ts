@@ -34,3 +34,16 @@ export function serializedError(error: ILogInput) {
 
   return error;
 }
+
+export function formatResBodyString(body: string) {
+  return body.replace(/\\"/g, '');
+}
+
+export function getCommonData(data?: ILogInput) {
+  return data
+    ? {
+        env: process.env.NODE_ENV,
+        ...serializedError(data),
+      }
+    : undefined;
+}
