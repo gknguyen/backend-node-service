@@ -9,5 +9,4 @@ jobs:
   cd:
     name: Continue Deployment
     uses: ./.github/workflows/release-tag.yml
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    secrets: inherit
