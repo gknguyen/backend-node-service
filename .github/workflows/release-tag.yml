@@ -7,6 +7,10 @@ on:
         required: false
         type: string
         description: 'The tag to be created'
+      package-json-path:
+        required: false
+        type: string
+        default: 'package.json'
 
 jobs:
   release-tag:
@@ -20,7 +24,8 @@ jobs:
       - name: Get version from package.json
         id: get_version
         run: |
-          VERSION=$(jq -r '.version' package.json)
+          PACKAGE_JSON_PATH="${{ inputs['package-json-path'] }}"
+          VERSION=$(jq -r '.version' $PACKAGE_JSON_PATH)
           echo "Version from package.json: $VERSION"
           echo "::set-output name=version::$VERSION"
 
