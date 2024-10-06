@@ -4,11 +4,11 @@ on:
   workflow_call:
     inputs:
       package-json-path:
-        required: true
+        required: false
         type: string
         default: 'package.json'
       branch-prefix:
-        required: true
+        required: false
         type: string
         default: 'release/'
 
