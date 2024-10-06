@@ -1,0 +1,64 @@
+name: Check Version
+
+on:
+  workflow_call:
+    inputs:
+      package-json-path:
+        required: false
+        type: string
+        default: 'package.json'
+      branch-prefix:
+        required: false
+        type: string
+        default: 'release/'
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    # Only run if the branch starts with 'release/'
+    if: startsWith(github.head_ref, 'release/')
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Extract version from branch name
+        id: get_branch
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          BRANCH_PREFIX="${{ inputs.branch-prefix }}"
+
+          echo "Branch name is $BRANCH_NAME"
+          # Extract version assuming branch is named as "vX.X.X" or another custom pattern
+          if [[ "$BRANCH_NAME" =~ ^${BRANCH_PREFIX}[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            VERSION_FROM_BRANCH="${BRANCH_NAME#$BRANCH_PREFIX}"
+            echo "Extracted version from branch: $VERSION_FROM_BRANCH"
+            echo "::set-output name=version_from_branch::$VERSION_FROM_BRANCH"
+          else
+            echo "Branch name does not follow the expected pattern (${BRANCH_PREFIX}X.X.X)"
+            exit 1
+          fi
+
+      - name: Extract version from package.json
+        id: get_package_version
+        run: |
+          PACKAGE_JSON_PATH="${{ inputs['package-json-path'] }}"
+          PACKAGE_VERSION=$(jq -r '.version' $PACKAGE_JSON_PATH)
+          echo "Version from package.json: $PACKAGE_VERSION"
+          echo "::set-output name=package_version::$PACKAGE_VERSION"
+
+      - name: Compare versions
+        run: |
+          VERSION_FROM_BRANCH=${{ steps.get_branch.outputs.version_from_branch }}
+          PACKAGE_VERSION=${{ steps.get_package_version.outputs.package_version }}
+
+          echo "Comparing branch version $VERSION_FROM_BRANCH with package.json version $PACKAGE_VERSION"
+
+          if [ "$VERSION_FROM_BRANCH" != "$PACKAGE_VERSION" ]; then
+            echo "Version mismatch! Branch version: $VERSION_FROM_BRANCH, package.json version: $PACKAGE_VERSION"
+            exit 1
+          else
+            echo "Versions match."
+          fi

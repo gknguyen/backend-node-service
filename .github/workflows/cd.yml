@@ -1,0 +1,12 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  cd:
+    name: Continue Deployment
+    uses: ./.github/workflows/release-tag.yml
+    secrets: inherit
