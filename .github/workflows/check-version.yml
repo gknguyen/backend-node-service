@@ -27,7 +27,7 @@ jobs:
       - name: Extract version from branch name
         id: get_branch
         run: |
-          BRANCH_NAME="${{ github.ref_name }}"
+          BRANCH_NAME="${{ github.head_ref }}"
           BRANCH_PREFIX="${{ inputs.branch-prefix }}"
 
           echo "Branch name is $BRANCH_NAME"
