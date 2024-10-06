@@ -10,12 +10,15 @@ on:
       branch-prefix:
         required: true
         type: string
-        default: 'release'
+        default: 'release/'
 
 jobs:
   check-version:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
+    # Only run if the branch starts with 'release/'
+    if: startsWith(github.head_ref, 'release/')
 
     steps:
       - name: Checkout the repository
