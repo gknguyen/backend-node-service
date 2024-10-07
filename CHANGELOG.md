@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Chores
 
+* update service description, explain Technical Approach ([4c7ea0a](https://github.com/gknguyen/backend-node-service/commit/4c7ea0adc80d04c1b6449de1aafc0b5857114ee1))
 * update the way to define base logger as factory ([83b7320](https://github.com/gknguyen/backend-node-service/commit/83b73206a95473a943d49cfa2316973d59aebdfb))
 
 ## 1.0.0 (2024-10-06)
