@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/gknguyen/backend-node-service/compare/1.0.0...1.1.0) (2024-10-07)
+
+
+### Features
+
+* add module health ([0680f9a](https://github.com/gknguyen/backend-node-service/commit/0680f9a618c58ec715d85b624d2cb8bf053be364))
+* add the built in nest logger ([b26f095](https://github.com/gknguyen/backend-node-service/commit/b26f095f50f07600c396198a95723f82183d1a09))
+* add winston logger ([c52520f](https://github.com/gknguyen/backend-node-service/commit/c52520f89008ace19da3242cc7189fa0db1b9d5e))
+
+
+### Chores
+
+* update the way to define base logger as factory ([83b7320](https://github.com/gknguyen/backend-node-service/commit/83b73206a95473a943d49cfa2316973d59aebdfb))
+
 ## 1.0.0 (2024-10-06)
 
 
