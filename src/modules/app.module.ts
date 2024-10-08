@@ -1,9 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { HealthModule } from './health/health.module';
 import { LoggerMiddleware } from 'src/middleware/logger.middleware';
+import { HealthModule } from './health/health.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
-  imports: [HealthModule],
+  imports: [HealthModule, PaymentModule],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

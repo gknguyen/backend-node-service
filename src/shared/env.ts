@@ -23,6 +23,13 @@ const ENV = {
       PATHS: config.get<string[]>('logger.redact.paths') || [],
     },
   },
+  PAYMENT_GATEWAY: {
+    STRIPE: {
+      PUBLIC_KEY: config.get<string>('paymentGateway.stripe.publicKey'),
+      SECRET_KEY: config.get<string>('paymentGateway.stripe.secretKey'),
+      TEST_MODE: config.get<boolean>('paymentGateway.stripe.testMode'),
+    },
+  },
 };
 
 export default ENV;

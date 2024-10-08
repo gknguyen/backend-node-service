@@ -22,6 +22,10 @@
 - [pino](https://getpino.io/#/) (Default)
 - [winston](https://github.com/winstonjs/winston)
 
+### Payment Gateway
+
+- [stripe](https://stripe.com/)
+
 ## Install
 
 ```bash

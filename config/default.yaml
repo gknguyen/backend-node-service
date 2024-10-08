@@ -20,3 +20,9 @@ logger:
       - '*.headers["access-token"]'
       - password
       - secret
+
+paymentGateway:
+  stripe:
+    publicKey:
+    secretKey:
+    testMode: true

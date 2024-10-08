@@ -29,3 +29,11 @@ logger:
     paths:
       __name: LOGGER_REDACT_PATHS
       __format: json
+
+paymentGateway:
+  stripe:
+    publicKey: STRIPE_PUBLIC_KEY
+    secretKey: STRIPE_SECRET_KEY
+    testMode:
+      __name: STRIPE_TEST_MODE
+      __format: json
