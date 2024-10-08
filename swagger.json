@@ -1,0 +1,386 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/health-check": {
+      "get": {
+        "operationId": "healthCheck",
+        "summary": "",
+        "description": "Get ping check health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {},
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        },
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/payment-gateway/user/stripe/customers/{email}": {
+      "get": {
+        "operationId": "userGetStripeCustomer",
+        "summary": "Get Stripe customer information by User.",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment Gateway - Stripe"
+        ]
+      }
+    },
+    "/api/payment-gateway/user/stripe/customers/cards": {
+      "post": {
+        "operationId": "userAddStripeCustomerCards",
+        "summary": "Add card for Stripe Customer by User.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "StripeAddCustomerCardInputDto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeAddCustomerCardInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment Gateway - Stripe"
+        ]
+      }
+    },
+    "/api/payment-gateway/user/stripe/customers/{email}/cards/{id}": {
+      "delete": {
+        "operationId": "userRemoveStripeCustomerCard",
+        "summary": "Remove card for Stripe Customer by User.",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment Gateway - Stripe"
+        ]
+      }
+    },
+    "/api/payment-gateway/user/stripe/customers/{email}/charge": {
+      "post": {
+        "operationId": "userChargeStripeCustomer",
+        "summary": "Charge transaction with Stripe gateway bu User.",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "StripeChargeInputDto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeChargeInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment Gateway - Stripe"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Service API spec",
+    "description": "API specification for the service | [swagger.json](swagger.json)",
+    "version": "1.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "http://127.0.0.1:4001"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "name": "access-token",
+        "type": "apiKey",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "StripeAddCustomerCardInputDto": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string",
+            "default": "424242424242"
+          },
+          "name": {
+            "type": "string",
+            "default": "full name"
+          },
+          "expiryMonth": {
+            "type": "string",
+            "default": "09"
+          },
+          "expiryYear": {
+            "type": "string",
+            "default": "2025"
+          },
+          "cvc": {
+            "type": "string",
+            "default": "123"
+          },
+          "brand": {
+            "type": "string",
+            "enum": [
+              "pm_card_visa",
+              "pm_card_mastercard",
+              "pm_card_jcb",
+              "pm_card_amex",
+              "pm_card_unionpay"
+            ],
+            "default": "pm_card_visa"
+          }
+        },
+        "required": [
+          "number",
+          "name",
+          "expiryMonth",
+          "expiryYear",
+          "cvc",
+          "brand"
+        ]
+      },
+      "StripeChargeInputDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "default": 10000
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "VND",
+              "USD"
+            ],
+            "default": "VND"
+          },
+          "description": {
+            "type": "string",
+            "default": "Monthly Subscription"
+          }
+        },
+        "required": [
+          "amount",
+          "currency"
+        ]
+      }
+    }
+  }
+}
