@@ -71,7 +71,7 @@ export class Logger implements IBaseLogger {
           statusCode: res.statusCode,
         },
       };
-      if (res.statusCode >= 200 && res.statusCode <= 400)
+      if (res.statusCode >= 200 && res.statusCode < 400)
         this.debug(`HTTP Success Log [${res.statusCode}]`, payload);
       else this.error(`HTTP Error Log [${res.statusCode}]`, payload);
       rawResponseEnd.apply(res, restArgs);

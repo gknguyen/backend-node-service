@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HealthApiController } from './health.controller.api';
+import { HealthApiController } from './health.api.controller';
 import { HealthService } from '../services/health.service';
 import { TerminusModule } from '@nestjs/terminus';
 
