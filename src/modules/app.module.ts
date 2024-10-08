@@ -1,7 +1,12 @@
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { HealthModule } from './health/health.module';
-import { Module } from '@nestjs/common';
+import { LoggerMiddleware } from 'src/middleware/logger.middleware';
 
 @Module({
   imports: [HealthModule],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

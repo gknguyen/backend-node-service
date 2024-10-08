@@ -17,8 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
-    # Only run if the branch starts with 'release/'
-    if: startsWith(github.head_ref, 'release/')
+    if: startsWith(github.head_ref, 'release/') && github.event.pull_request.merged == true
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
-    # Only run if the branch starts with 'release/'
     if: startsWith(github.head_ref, 'release/')
 
     steps:

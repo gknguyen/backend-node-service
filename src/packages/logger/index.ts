@@ -2,7 +2,7 @@ import { LOGGER_TYPE_MAPPER, LoggerType } from './shared/const';
 import { IBaseLogger, IBaseLoggerOptions, ILogInput } from './shared/interface';
 import { Request, Response } from 'express';
 import { formatResBodyString, getUserId } from './shared/utils';
-import format from 'string-template';
+import * as format from 'string-template';
 
 export class Logger implements IBaseLogger {
   logger: IBaseLogger;
