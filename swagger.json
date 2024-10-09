@@ -171,9 +171,9 @@
         ]
       }
     },
-    "/api/payment-gateway/user/stripe/customers/{email}": {
+    "/api/payment-gateway/stripe/customers/{email}": {
       "get": {
-        "operationId": "userGetStripeCustomer",
+        "operationId": "getStripeCustomer",
         "summary": "Get Stripe customer information by User.",
         "parameters": [
           {
@@ -195,9 +195,9 @@
         ]
       }
     },
-    "/api/payment-gateway/user/stripe/customers/cards": {
+    "/api/payment-gateway/stripe/customers/cards": {
       "post": {
-        "operationId": "userAddStripeCustomerCards",
+        "operationId": "addStripeCustomerCards",
         "summary": "Add card for Stripe Customer by User.",
         "parameters": [],
         "requestBody": {
@@ -221,9 +221,9 @@
         ]
       }
     },
-    "/api/payment-gateway/user/stripe/customers/{email}/cards/{id}": {
+    "/api/payment-gateway/stripe/customers/{email}/cards/{id}": {
       "delete": {
-        "operationId": "userRemoveStripeCustomerCard",
+        "operationId": "removeStripeCustomerCard",
         "summary": "Remove card for Stripe Customer by User.",
         "parameters": [
           {
@@ -253,9 +253,9 @@
         ]
       }
     },
-    "/api/payment-gateway/user/stripe/customers/{email}/charge": {
+    "/api/payment-gateway/stripe/customers/{email}/charge": {
       "post": {
-        "operationId": "userChargeStripeCustomer",
+        "operationId": "chargeStripeCustomer",
         "summary": "Charge transaction with Stripe gateway bu User.",
         "parameters": [
           {
