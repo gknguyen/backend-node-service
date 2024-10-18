@@ -4,7 +4,7 @@ import { StripeService } from '../services/stripe.service';
 import { StripeAddCustomerCardInputDto, StripeChargeInputDto } from '../shared/stripe.dto';
 
 @ApiTags('Payment Gateway - Stripe')
-@Controller({ path: 'payment-gateway/stripe' })
+@Controller({ path: 'api/payment-gateway/stripe' })
 export class StripeApiController {
   constructor(private readonly stripeService: StripeService) {}
 

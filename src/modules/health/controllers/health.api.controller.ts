@@ -5,7 +5,7 @@ import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 import { pick } from 'lodash';
 
 @ApiTags('Health')
-@Controller({ path: 'health-check' })
+@Controller({ path: 'api/health-check' })
 @Controller()
 export class HealthApiController {
   constructor(

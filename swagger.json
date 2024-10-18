@@ -287,6 +287,30 @@
           "Payment Gateway - Stripe"
         ]
       }
+    },
+    "/pubsub/sse/{id}": {
+      "get": {
+        "operationId": "serverPushChannel",
+        "summary": "SSE channel which push data to client side.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Pubsub - SSE"
+        ]
+      }
     }
   },
   "info": {
