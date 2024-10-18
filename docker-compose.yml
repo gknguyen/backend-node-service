@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  service:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: production
+    image: backend-node-service:local
+    container_name: backend-node-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - SERVICE_PORT=4200
+    env_file:
+      - .env
+    volumes:
+      - backend-node-service:/home/src/app
+    networks:
+      - backend-network
+    ports:
+      - 4200:4200
+
+networks:
+  backend-network:
+    name: backend-network
+    driver: bridge
+
+volumes:
+  backend-node-service:
+    name: backend-node-service
+    driver: local
