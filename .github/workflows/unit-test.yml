@@ -47,8 +47,8 @@ jobs:
         with:
           skip-step: all
           output: report-markdown
-          coverage-file: report/coverage/coverage-final.json
-          base-coverage-file: report/coverage/coverage-final.json
+          coverage-file: coverage/coverage-final.json
+          base-coverage-file: coverage/coverage-final.json
           annotations: none
 
       - name: Write coverage report to workflow job summary
