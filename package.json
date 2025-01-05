@@ -106,6 +106,7 @@
     },
     "reporters": [
       "default",
+      "github-actions",
       [
         "jest-junit",
         {

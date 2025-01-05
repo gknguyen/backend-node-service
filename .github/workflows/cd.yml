@@ -1,4 +1,4 @@
-name: CD
+name: Continue Deployment
 
 on:
   pull_request:

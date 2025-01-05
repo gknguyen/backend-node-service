@@ -3,6 +3,11 @@ name: Release Tag
 on:
   workflow_call:
     inputs:
+      runner:
+        description: 'Runner'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
       tag:
         required: false
         type: string
@@ -14,7 +19,7 @@ on:
 
 jobs:
   release-tag:
-    runs-on: ubuntu-latest
+    runs-on: ['${{ inputs.RUNNER }}']
     timeout-minutes: 5
 
     if: startsWith(github.head_ref, 'release/') && github.event.pull_request.merged == true
@@ -24,7 +29,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: true
 
