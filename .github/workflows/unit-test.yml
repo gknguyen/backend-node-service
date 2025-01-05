@@ -30,7 +30,7 @@ jobs:
 
       - name: Run tests
         if: ${{ always() }}
-        run: npm run test:cov
+        run: npm run test:ci
 
       - name: Unit test report
         uses: dorny/test-reporter@v1
@@ -47,8 +47,8 @@ jobs:
         with:
           skip-step: all
           output: report-markdown
-          coverage-file: coverage/coverage-final.json
-          base-coverage-file: coverage/coverage-final.json
+          coverage-file: coverage/jest-coverage.json
+          base-coverage-file: coverage/jest-coverage.json
           annotations: none
 
       - name: Write coverage report to workflow job summary
