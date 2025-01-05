@@ -1,6 +1,8 @@
 # folders
 /dist
 /node_modules
+/coverage
+/report-unit-test
 
 # files
 swagger.json
