@@ -21,10 +21,15 @@
 
 - [pino](https://getpino.io/#/) (Default)
 - [winston](https://github.com/winstonjs/winston)
+- [NestJS logger](https://docs.nestjs.com/techniques/logger#extend-built-in-logger)
 
 ### Payment Gateway
 
 - [stripe](https://stripe.com/)
+
+### Pubsub
+
+- [NestJS SSE](https://docs.nestjs.com/techniques/server-sent-events)
 
 ## Install
 
