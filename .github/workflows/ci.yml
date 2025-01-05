@@ -1,4 +1,4 @@
-name: CI
+name: Continue Integration
 
 on:
   pull_request:
@@ -6,7 +6,12 @@ on:
       - master
 
 jobs:
-  ci:
-    name: Continue Integration
+  check-version:
+    name: Check Version
     uses: ./.github/workflows/check-version.yml
+    secrets: inherit
+
+  unit-test:
+    name: Unit Test
+    uses: ./.github/workflows/unit-test.yml
     secrets: inherit
