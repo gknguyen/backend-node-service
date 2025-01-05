@@ -65,7 +65,7 @@ jobs:
           message: ${{ steps.coverage.outputs.report }}
 
       - name: Attach coverage check status
-        uses: LouisBrunner/checks-action@v2
+        uses: LouisBrunner/checks-action@v2.0.0
         if: ${{ always() }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
