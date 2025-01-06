@@ -55,6 +55,7 @@ jobs:
           coverage-file: coverage-e2e/jest-coverage.json
           base-coverage-file: coverage-e2e/jest-coverage.json
           annotations: none
+          custom-title: Coverage report (E2E)
 
       - name: Write coverage report to workflow job summary
         id: publish-coverage-e2e-report
