@@ -1,0 +1,80 @@
+name: E2E Test
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: 'Runner'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+
+jobs:
+  e2e-test:
+    runs-on: ['${{ inputs.RUNNER }}']
+    timeout-minutes: 5
+
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+
+      - name: Restore cached node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Run tests
+        if: ${{ always() }}
+        run: npm run test:e2e:ci
+
+      - name: E2E test report
+        uses: dorny/test-reporter@v1
+        if: ${{ always() }}
+        with:
+          name: E2E test report
+          path: report-e2e-test/*.xml
+          reporter: jest-junit
+
+      - name: Generate e2e test coverage report
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        id: coverage-e2e
+        if: ${{ always() }}
+        with:
+          skip-step: all
+          output: report-markdown
+          coverage-file: coverage-e2e/jest-coverage.json
+          base-coverage-file: coverage-e2e/jest-coverage.json
+          annotations: none
+
+      - name: Write coverage report to workflow job summary
+        id: publish-coverage-e2e-report
+        if: ${{ always() }}
+        run: |
+          echo '${{ steps.coverage-e2e.outputs.report }}' >> $GITHUB_STEP_SUMMARY
+
+      - name: Attach coverage report to PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ always() }}
+        with:
+          header: coverage-e2e-report
+          message: ${{ steps.coverage-e2e.outputs.report }}
+
+      - name: Attach coverage check status
+        uses: LouisBrunner/checks-action@v2.0.0
+        if: ${{ always() }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Coverage report (E2E)
+          conclusion: ${{ steps.coverage-e2e.outcome }}
+          output: |
+            {"summary": ${{ toJSON(steps.coverage-e2e.outputs.report) }}}
