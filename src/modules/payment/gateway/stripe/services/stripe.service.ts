@@ -1,14 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ERRORS } from 'src/exception/const';
 import ENV from 'src/shared/env';
 import Stripe from 'stripe';
 import { MOCK_CARD_TOKEN_MAPPING } from '../shared/stripe.const';
 import { CardDetailDto, TransactionDto } from '../shared/stripe.dto';
 import { IUser } from '../shared/stripe.interface';
+import { STRIPE_TOKEN } from '../shared/stripe.provider';
 
 @Injectable()
 export class StripeService {
-  private readonly stripe = new Stripe(ENV.PAYMENT_GATEWAY.STRIPE.SECRET_KEY);
+  constructor(@Inject(STRIPE_TOKEN) private readonly stripe: Stripe) {}
 
   async getCardToken(card: CardDetailDto) {
     /** https://stripe.com/docs/testing?testing-method=tokens#visa */

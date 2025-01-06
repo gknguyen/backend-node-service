@@ -1,9 +1,47 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "../",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/src/$1",
+    "^test/(.*)$": "<rootDir>/test/$1"
+  },
+  "coverageDirectory": "<rootDir>/coverage-e2e",
+  "collectCoverageFrom": [
+    "<rootDir>/src/**/*.{js,ts}",
+    "!<rootDir>/src/**/*.spec.{js,ts}",
+    "!<rootDir>/src/main.ts",
+    "!**/node_modules/*"
+  ],
+  "reporters": [
+    "default",
+    "github-actions",
+    [
+      "jest-junit",
+      {
+        "outputDirectory": "report-e2e-test",
+        "outputName": "jest-junit.xml",
+        "ancestorSeparator": " › ",
+        "suiteNameTemplate": "{filepath}",
+        "classNameTemplate": "{classname}",
+        "titleTemplate": "{title}"
+      }
+    ],
+    [
+      "jest-html-reporters",
+      {
+        "publicPath": "report-e2e-test",
+        "filename": "jest.html",
+        "expand": true,
+        "openReport": false
+      }
+    ]
+  ],
+  "globalSetup": "<rootDir>/test/globalSetup.ts",
+  "globalTeardown": "<rootDir>/test/globalTeardown.ts",
+  "setupFilesAfterEnv": ["<rootDir>/test/setupFile.ts"]
 }

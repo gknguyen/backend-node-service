@@ -1,4 +1,4 @@
-name: Unit Test
+name: E2E Test
 
 on:
   workflow_call:
@@ -10,7 +10,7 @@ on:
         default: 'ubuntu-latest'
 
 jobs:
-  unit-test:
+  e2e-test:
     runs-on: ['${{ inputs.RUNNER }}']
     timeout-minutes: 5
 
@@ -35,46 +35,47 @@ jobs:
 
       - name: Run tests
         if: ${{ always() }}
-        run: npm run test:ci
+        run: npm run test:e2e:ci
 
-      - name: Unit test report
+      - name: E2E test report
         uses: dorny/test-reporter@v1
         if: ${{ always() }}
         with:
-          name: Unit test report
-          path: report-unit-test/*.xml
+          name: E2E test report
+          path: report-e2e-test/*.xml
           reporter: jest-junit
 
-      - name: Generate unit test coverage report
+      - name: Generate e2e test coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2
-        id: coverage
+        id: coverage-e2e
         if: ${{ always() }}
         with:
           skip-step: all
           output: report-markdown
-          coverage-file: coverage/jest-coverage.json
-          base-coverage-file: coverage/jest-coverage.json
+          coverage-file: coverage-e2e/jest-coverage.json
+          base-coverage-file: coverage-e2e/jest-coverage.json
           annotations: none
+          custom-title: Coverage report (E2E)
 
       - name: Write coverage report to workflow job summary
-        id: publish-coverage-report
+        id: publish-coverage-e2e-report
         if: ${{ always() }}
         run: |
-          echo '${{ steps.coverage.outputs.report }}' >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.coverage-e2e.outputs.report }}' >> $GITHUB_STEP_SUMMARY
 
       - name: Attach coverage report to PR
         uses: marocchino/sticky-pull-request-comment@v2
         if: ${{ always() }}
         with:
-          header: coverage-report
-          message: ${{ steps.coverage.outputs.report }}
+          header: coverage-e2e-report
+          message: ${{ steps.coverage-e2e.outputs.report }}
 
       - name: Attach coverage check status
         uses: LouisBrunner/checks-action@v2.0.0
         if: ${{ always() }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: Coverage report
-          conclusion: ${{ steps.coverage.outcome }}
+          name: Coverage report (E2E)
+          conclusion: ${{ steps.coverage-e2e.outcome }}
           output: |
-            {"summary": ${{ toJSON(steps.coverage.outputs.report) }}}
+            {"summary": ${{ toJSON(steps.coverage-e2e.outputs.report) }}}
