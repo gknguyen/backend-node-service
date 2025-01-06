@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { StripeApiController } from './stripe/controllers/stripe.api.controller';
 import { StripeService } from './stripe/services/stripe.service';
+import { StripeProviders } from './stripe/shared/stripe.provider';
 
 @Module({
-  imports: [],
   controllers: [StripeApiController],
-  providers: [StripeService],
+  providers: [...StripeProviders, StripeService],
 })
 export class PaymentGatewayModule {}

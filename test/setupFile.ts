@@ -1,12 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from 'src/modules/app.module';
+import { STRIPE_TOKEN } from 'src/modules/payment/gateway/stripe/shared/stripe.provider';
 import { configureMiddlewares } from 'src/shared/bootstrap';
 import { configureSwagger } from 'src/shared/swagger';
+import { mockStripeClient } from './mock';
 
 beforeAll(async () => {
   const module = await Test.createTestingModule({
     imports: [AppModule],
-  }).compile();
+  })
+    .overrideProvider(STRIPE_TOKEN)
+    .useValue(mockStripeClient)
+    .compile();
 
   const app = module.createNestApplication();
   configureMiddlewares(app);
