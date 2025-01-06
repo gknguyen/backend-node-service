@@ -11,7 +11,14 @@ jobs:
     uses: ./.github/workflows/check-version.yml
     secrets: inherit
 
+  prepare:
+    name: Prepare
+    uses: ./.github/workflows/prepare.yml
+    secrets: inherit
+    needs: [check-version]
+
   unit-test:
     name: Unit Test
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
+    needs: [prepare]
