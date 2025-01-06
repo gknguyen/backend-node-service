@@ -18,7 +18,9 @@
     "test:cov": "npm test -- --coverage",
     "test:ci": "npm run test:cov -- --ci --json --testLocationInResults --outputFile=coverage/jest-coverage.json",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./test/jest-e2e.json --runInBand",
+    "test:e2e:cov": "npm run test:e2e -- --coverage",
+    "test:e2e:ci": "npm run test:e2e:cov -- --ci --json --testLocationInResults --outputFile=coverage-e2e/jest-e2e-coverage.json",
     "prepare": "husky",
     "release": "standard-version -s -t '' --no-verify",
     "release:as": "npm run release -- --release-as",
@@ -62,7 +64,7 @@
     "@types/express": "^4.17.21",
     "@types/jest": "29.5.1",
     "@types/lodash": "^4.17.10",
-    "@types/node": "18.16.12",
+    "@types/node": "^22.10.5",
     "@types/response-time": "^2.3.8",
     "@types/string-template": "^1.0.6",
     "@types/supertest": "^2.0.16",
@@ -85,50 +87,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.6.2"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
-    "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/$1"
-    },
-    "reporters": [
-      "default",
-      "github-actions",
-      [
-        "jest-junit",
-        {
-          "outputDirectory": "report-unit-test",
-          "outputName": "jest-junit.xml",
-          "ancestorSeparator": " › ",
-          "suiteNameTemplate": "{filepath}",
-          "classNameTemplate": "{classname}",
-          "titleTemplate": "{title}"
-        }
-      ],
-      [
-        "jest-html-reporters",
-        {
-          "publicPath": "report-unit-test",
-          "filename": "jest.html",
-          "expand": true,
-          "openReport": false
-        }
-      ]
-    ]
   },
   "standard-version": {
     "compareUrlFormat": "https://github.com/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
