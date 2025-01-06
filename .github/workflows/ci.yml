@@ -15,7 +15,6 @@ jobs:
     name: Prepare
     uses: ./.github/workflows/prepare.yml
     secrets: inherit
-    needs: [check-version]
 
   unit-test:
     name: Unit Test
