@@ -8,7 +8,17 @@ on:
       - closed
 
 jobs:
-  cd:
-    name: Continue Deployment
+  build-docker-image:
+    name: Build Docker Image
+    uses: ./.github/workflows/build-docker-image.yml
+
+  docker-image-security-scan:
+    name: Docker Image Security Scan
+    uses: ./.github/workflows/docker-image-security-scan.yml
+    needs: [build-docker-image]
+
+  release-tag:
+    name: Release Tag
     uses: ./.github/workflows/release-tag.yml
     secrets: inherit
+    needs: [build-docker-image]
