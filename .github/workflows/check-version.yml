@@ -19,7 +19,7 @@ on:
 
 jobs:
   check-version:
-    runs-on: ['${{ inputs.RUNNER }}']
+    runs-on: ['${{ inputs.runner }}']
     timeout-minutes: 5
 
     if: startsWith(github.head_ref, 'release/')
