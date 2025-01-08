@@ -30,6 +30,7 @@
 ### Pubsub
 
 - [NestJS SSE](https://docs.nestjs.com/techniques/server-sent-events)
+- [NestJS Socket.IO](https://docs.nestjs.com/websockets/gateways)
 
 ## Install
 
