@@ -28,4 +28,7 @@ paymentGateway:
     testMode: true
 
 rabbitmq:
-  url: amqp://127.0.0.1:5672
+  uri: amqp://127.0.0.1:5672
+
+kafka:
+  broker: 127.0.0.1:9092

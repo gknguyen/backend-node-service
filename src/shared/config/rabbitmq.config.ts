@@ -5,7 +5,7 @@ export function getRabbitMQConfig(): ClientProvider {
   return {
     transport: Transport.RMQ,
     options: {
-      urls: [ENV.RABBITMQ.URL],
+      urls: [ENV.RABBITMQ.URI],
       queue: ENV.SERVICE.NAME,
       queueOptions: {
         durable: false,

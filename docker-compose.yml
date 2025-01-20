@@ -32,6 +32,40 @@ services:
       - 5672:5672
       - 15672:15672 # GUI
 
+  zookeeper:
+    image: bitnami/zookeeper
+    container_name: zookeeper
+    tmpfs: /datalog
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - zookeeper-data:/bitnami/zookeeper
+    networks:
+      - backend-network
+    ports:
+      - 2181:2181
+
+  kafka:
+    image: bitnami/kafka
+    container_name: kafka
+    restart: on-failure
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=INTERNAL://kafka:29092,LOCAL://kafka:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:29092,LOCAL://localhost:9092
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+    volumes:
+      - kafka-data:/bitnami/kafka
+    networks:
+      - backend-network
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+
 networks:
   backend-network:
     name: backend-network
@@ -43,4 +77,10 @@ volumes:
     driver: local
   rabbitmq-data:
     name: rabbitmq-data
+    driver: local
+  zookeeper-data:
+    name: zookeeper-data
+    driver: local
+  kafka-data:
+    name: kafka-data
     driver: local

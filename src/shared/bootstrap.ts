@@ -9,6 +9,7 @@ import { AppModule } from 'src/modules/app.module';
 import { getRabbitMQConfig } from './config/rabbitmq.config';
 import ENV from './env';
 import { configureSwagger } from './swagger';
+import { getKafkaConfig } from './config/kafka.config';
 
 export function configureMiddlewares(app: INestApplication) {
   app.use(helmet());
@@ -22,6 +23,7 @@ export function configureMiddlewares(app: INestApplication) {
 
 export async function configureMicroservices(app: INestApplication) {
   app.connectMicroservice(getRabbitMQConfig());
+  app.connectMicroservice(getKafkaConfig());
   await app.startAllMicroservices();
 }
 

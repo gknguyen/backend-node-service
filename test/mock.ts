@@ -7,3 +7,8 @@ export const mockRabbitMQClient = {
   connect: jest.fn().mockResolvedValue(true),
   emit: jest.fn(),
 };
+
+export const mockKafkaClient = {
+  connect: jest.fn().mockResolvedValue(true),
+  emit: jest.fn(),
+};
