@@ -1,9 +1,9 @@
 import { Inject, Module, OnModuleInit } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { EventApiController } from './controllers/event.api.controller';
-import { ClientRMQ, ClientsModule } from '@nestjs/microservices';
-import { eventProviders, RABBITMQ_TOKEN } from './shared/event.provider';
+import { ClientKafka, ClientRMQ, ClientsModule } from '@nestjs/microservices';
 import { logger } from 'src/shared/logger';
+import { EventApiController } from './controllers/event.api.controller';
+import { eventProviders, KAFKA_TOKEN, RABBITMQ_TOKEN } from './shared/event.provider';
 
 @Module({
   imports: [
@@ -13,11 +13,17 @@ import { logger } from 'src/shared/logger';
   controllers: [EventApiController],
 })
 export class EventModule implements OnModuleInit {
-  constructor(@Inject(RABBITMQ_TOKEN) private readonly rabbitmqClient: ClientRMQ) {}
+  constructor(
+    @Inject(RABBITMQ_TOKEN) private readonly rabbitmqClient: ClientRMQ,
+    @Inject(KAFKA_TOKEN) private readonly kafkaClient: ClientKafka,
+  ) {}
 
   onModuleInit() {
     this.rabbitmqClient.connect().then(() => {
       logger.info('Connected to RabbitMQ');
+    });
+    this.kafkaClient.connect().then(() => {
+      logger.info('Connected to Kafka');
     });
   }
 }

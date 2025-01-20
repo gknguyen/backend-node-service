@@ -31,7 +31,10 @@ const ENV = {
     },
   },
   RABBITMQ: {
-    URL: config.get<string>('rabbitmq.url'),
+    URI: config.get<string>('rabbitmq.uri'),
+  },
+  KAFKA: {
+    BROKER: config.get<string>('kafka.broker'),
   },
 };
 

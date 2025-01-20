@@ -39,4 +39,7 @@ paymentGateway:
       __format: json
 
 rabbitmq:
-  url: RABBITMQ_URL
+  uri: RABBITMQ_URI
+
+kafka:
+  broker: KAFKA_BROKER

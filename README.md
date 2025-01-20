@@ -36,6 +36,7 @@
 
 - [NestJS Event](https://docs.nestjs.com/techniques/events)
 - [NestJS RabbitMQ](https://docs.nestjs.com/microservices/rabbitmq)
+- [NestJS Kafka](https://docs.nestjs.com/microservices/kafka)
 
 ## Install
 
