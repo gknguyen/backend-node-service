@@ -32,6 +32,11 @@
 - [NestJS SSE](https://docs.nestjs.com/techniques/server-sent-events)
 - [NestJS Socket.IO](https://docs.nestjs.com/websockets/gateways)
 
+## Message Streaming
+
+- [NestJS Event](https://docs.nestjs.com/techniques/events)
+- [NestJS RabbitMQ](https://docs.nestjs.com/microservices/rabbitmq)
+
 ## Install
 
 ```bash

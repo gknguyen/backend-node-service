@@ -1,8 +1,9 @@
 import { Controller, Param, Sse } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { MessagePattern } from '@nestjs/microservices';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Observable, Subject } from 'rxjs';
-import { EventTypeEnum } from '../../../event/shared/event.const';
+import { EventTypeEnum, RabbitPatternEnum } from '../../../event/shared/event.const';
 import { EmitMessageDto } from '../../../event/shared/event.dto';
 import { SseService } from '../services/sse.service';
 import { IMessageEvent } from '../shared/interface';
@@ -32,6 +33,11 @@ export class SseController {
 
   @OnEvent(EventTypeEnum.Base)
   handleEvent(payload: EmitMessageDto) {
+    this.sseService.pushDataToChannel(payload.id, payload.data);
+  }
+
+  @MessagePattern(RabbitPatternEnum.Base)
+  handleEventFromRabbitMQ(payload: EmitMessageDto) {
     this.sseService.pushDataToChannel(payload.id, payload.data);
   }
 }

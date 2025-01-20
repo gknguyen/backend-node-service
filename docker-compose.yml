@@ -21,6 +21,17 @@ services:
     ports:
       - 4200:4200
 
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - backend-network
+    ports:
+      - 5672:5672
+      - 15672:15672 # GUI
+
 networks:
   backend-network:
     name: backend-network
@@ -29,4 +40,7 @@ networks:
 volumes:
   backend-node-service:
     name: backend-node-service
+    driver: local
+  rabbitmq-data:
+    name: rabbitmq-data
     driver: local

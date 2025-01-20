@@ -37,3 +37,6 @@ paymentGateway:
     testMode:
       __name: STRIPE_TEST_MODE
       __format: json
+
+rabbitmq:
+  url: RABBITMQ_URL

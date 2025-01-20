@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import * as responseTime from 'response-time';
 import { HttpExceptionFilter } from 'src/exception/http-exception.filter';
 import { AppModule } from 'src/modules/app.module';
+import { getRabbitMQConfig } from './config/rabbitmq.config';
 import ENV from './env';
 import { configureSwagger } from './swagger';
 
@@ -19,12 +20,18 @@ export function configureMiddlewares(app: INestApplication) {
   app.useGlobalFilters(new HttpExceptionFilter());
 }
 
+export async function configureMicroservices(app: INestApplication) {
+  app.connectMicroservice(getRabbitMQConfig());
+  await app.startAllMicroservices();
+}
+
 export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   configureMiddlewares(app);
   app.setGlobalPrefix(ENV.SERVICE.BASE_URL);
   configureSwagger(app);
+  await configureMicroservices(app);
 
   await app.listen(ENV.SERVICE.PORT);
 }

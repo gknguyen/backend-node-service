@@ -30,6 +30,9 @@ const ENV = {
       TEST_MODE: config.get<boolean>('paymentGateway.stripe.testMode'),
     },
   },
+  RABBITMQ: {
+    URL: config.get<string>('rabbitmq.url'),
+  },
 };
 
 export default ENV;
