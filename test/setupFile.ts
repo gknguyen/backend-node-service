@@ -3,7 +3,8 @@ import { AppModule } from 'src/modules/app.module';
 import { STRIPE_TOKEN } from 'src/modules/payment/gateway/stripe/shared/stripe.provider';
 import { configureMiddlewares } from 'src/shared/bootstrap';
 import { configureSwagger } from 'src/shared/swagger';
-import { mockStripeClient } from './mock';
+import { mockRabbitMQClient, mockStripeClient } from './mock';
+import { RABBITMQ_TOKEN } from 'src/modules/event/shared/event.provider';
 
 beforeAll(async () => {
   const module = await Test.createTestingModule({
@@ -11,6 +12,8 @@ beforeAll(async () => {
   })
     .overrideProvider(STRIPE_TOKEN)
     .useValue(mockStripeClient)
+    .overrideProvider(RABBITMQ_TOKEN)
+    .useValue(mockRabbitMQClient)
     .compile();
 
   const app = module.createNestApplication();
