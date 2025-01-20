@@ -16,6 +16,12 @@ jobs:
     uses: ./.github/workflows/prepare.yml
     secrets: inherit
 
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+    secrets: inherit
+    needs: [prepare]
+
   unit-test:
     name: Unit Test
     uses: ./.github/workflows/unit-test.yml

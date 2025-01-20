@@ -1,0 +1,44 @@
+name: Lint
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: 'Runner'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+
+jobs:
+  lint:
+    runs-on: ['${{ inputs.runner }}']
+    timeout-minutes: 5
+
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+
+      - name: Restore cached node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Run lint
+        if: ${{ always() }}
+        run: npm run lint:ci
+
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@3.0.0
+        with:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          report-json: 'eslint_report.json'
