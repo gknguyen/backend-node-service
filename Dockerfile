@@ -2,7 +2,7 @@
 # BUILD
 ########
 
-FROM node:21-alpine AS build
+FROM node:22-alpine AS build
 
 WORKDIR /home/src/app
 
@@ -16,7 +16,7 @@ RUN npm prune --production
 # RUN
 #############
 
-FROM node:21-alpine AS production
+FROM node:22-alpine AS production
 
 WORKDIR /home/src/app
 
