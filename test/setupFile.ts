@@ -4,7 +4,8 @@ import { KAFKA_TOKEN, RABBITMQ_TOKEN } from 'src/modules/event/shared/event.prov
 import { STRIPE_TOKEN } from 'src/modules/payment/gateway/stripe/shared/stripe.provider';
 import { configureMiddlewares } from 'src/shared/bootstrap';
 import { configureSwagger } from 'src/shared/swagger';
-import { mockKafkaClient, mockRabbitMQClient, mockStripeClient } from './mock';
+import { mockDataSource, mockKafkaClient, mockRabbitMQClient, mockStripeClient } from './mock';
+import { DatabaseDomain } from 'src/modules/common/database/shared/database.const';
 
 beforeAll(async () => {
   const module = await Test.createTestingModule({
@@ -16,6 +17,10 @@ beforeAll(async () => {
     .useValue(mockRabbitMQClient)
     .overrideProvider(KAFKA_TOKEN)
     .useValue(mockKafkaClient)
+    .overrideProvider(DatabaseDomain.Auth)
+    .useValue(mockDataSource)
+    .overrideProvider(DatabaseDomain.Account)
+    .useValue(mockDataSource)
     .compile();
 
   const app = module.createNestApplication();
