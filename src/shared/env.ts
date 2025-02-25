@@ -36,6 +36,30 @@ const ENV = {
   KAFKA: {
     BROKER: config.get<string>('kafka.broker'),
   },
+  DATABASE: {
+    AUTH: {
+      HOST: config.get<string>('database.auth.host'),
+      PORT: config.get<number>('database.auth.port'),
+      USERNAME: config.get<string>('database.auth.user'),
+      PASSWORD: config.get<string>('database.auth.password'),
+      DATABASE: config.get<string>('database.auth.database'),
+      SCHEMA: config.get<string>('database.auth.schema'),
+      CONNECTION_TIMEOUT: config.get<number>('database.auth.connectionTimeout'),
+      MAX_QUERY_EXECUTION_TIME: config.get<number>('database.auth.maxQueryExecutionTime'),
+      POOL_SIZE: config.get<number>('database.auth.poolSize'),
+    },
+    ACCOUNT: {
+      HOST: config.get<string>('database.account.host'),
+      PORT: config.get<number>('database.account.port'),
+      USERNAME: config.get<string>('database.account.user'),
+      PASSWORD: config.get<string>('database.account.password'),
+      DATABASE: config.get<string>('database.account.database'),
+      SCHEMA: config.get<string>('database.account.schema'),
+      CONNECTION_TIMEOUT: config.get<number>('database.account.connectionTimeout'),
+      MAX_QUERY_EXECUTION_TIME: config.get<number>('database.account.maxQueryExecutionTime'),
+      POOL_SIZE: config.get<number>('database.account.poolSize'),
+    },
+  },
 };
 
 export default ENV;

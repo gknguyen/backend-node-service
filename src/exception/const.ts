@@ -14,3 +14,10 @@ export const ERRORS = {
     statusCode: HttpStatus.NOT_FOUND,
   },
 };
+
+export const AUTH_ERRORS = {
+  USER_EXISTED: {
+    message: 'User already existed.',
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
+};

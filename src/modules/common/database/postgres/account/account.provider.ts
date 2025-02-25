@@ -1,0 +1,29 @@
+import ENV from 'src/shared/env';
+import { DataSource } from 'typeorm';
+import { DatabaseDomain } from '../../shared/database.const';
+
+export const AccountDataSource = new DataSource({
+  type: 'postgres',
+  name: DatabaseDomain.Account,
+  host: ENV.DATABASE.ACCOUNT.HOST,
+  port: ENV.DATABASE.ACCOUNT.PORT,
+  username: ENV.DATABASE.ACCOUNT.USERNAME,
+  password: ENV.DATABASE.ACCOUNT.PASSWORD,
+  database: ENV.DATABASE.ACCOUNT.DATABASE,
+  schema: ENV.DATABASE.ACCOUNT.SCHEMA,
+  synchronize: false,
+  migrationsTableName: 'migrations',
+  migrations: [__dirname + '/migrations/*{.ts,.js}'],
+  migrationsRun: true,
+  migrationsTransactionMode: 'each',
+  logger: 'advanced-console',
+  connectTimeoutMS: ENV.DATABASE.ACCOUNT.CONNECTION_TIMEOUT,
+  maxQueryExecutionTime: ENV.DATABASE.ACCOUNT.MAX_QUERY_EXECUTION_TIME,
+  poolSize: ENV.DATABASE.ACCOUNT.POOL_SIZE,
+  entities: [__dirname + '/schemas/*{.ts,.js}'],
+});
+
+export const AccountDatabaseProvider = {
+  provide: DatabaseDomain.Account,
+  useFactory: () => AccountDataSource,
+};

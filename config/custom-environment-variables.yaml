@@ -43,3 +43,41 @@ rabbitmq:
 
 kafka:
   broker: KAFKA_BROKER
+
+database:
+  auth:
+    host: DATABASE_AUTH_HOST
+    port:
+      __name: DATABASE_AUTH_PORT
+      __format: json
+    user: DATABASE_AUTH_USER
+    password: DATABASE_AUTH_PASSWORD
+    database: DATABASE_AUTH_DATABASE
+    schema: DATABASE_AUTH_SCHEMA
+    connectionTimeout:
+      __name: DATABASE_AUTH_CONNECTION_TIMEOUT
+      __format: json
+    maxQueryExecutionTime:
+      __name: DATABASE_AUTH_MAX_QUERY_EXECUTION_TIME
+      __format: json
+    poolSize:
+      __name: DATABASE_AUTH_POOL_SIZE
+      __format: json
+  account:
+    host: DATABASE_ACCOUNT_HOST
+    port:
+      __name: DATABASE_ACCOUNT_PORT
+      __format: json
+    user: DATABASE_ACCOUNT_USER
+    password: DATABASE_ACCOUNT_PASSWORD
+    database: DATABASE_ACCOUNT_DATABASE
+    schema: DATABASE_ACCOUNT_SCHEMA
+    connectionTimeout:
+      __name: DATABASE_ACCOUNT_CONNECTION_TIMEOUT
+      __format: json
+    maxQueryExecutionTime:
+      __name: DATABASE_ACCOUNT_MAX_QUERY_EXECUTION_TIME
+      __format: json
+    poolSize:
+      __name: DATABASE_ACCOUNT_POOL_SIZE
+      __format: json

@@ -32,3 +32,25 @@ rabbitmq:
 
 kafka:
   broker: 127.0.0.1:9092
+
+database:
+  auth:
+    host: 127.0.0.1
+    port: 5432
+    user: postgres
+    password: postgres
+    database: auth
+    schema: public
+    connectionTimeout: 10000
+    maxQueryExecutionTime: 30000
+    poolSize: 1
+  account:
+    host: 127.0.0.1
+    port: 5432
+    user: postgres
+    password: postgres
+    database: account
+    schema: public
+    connectionTimeout: 10000
+    maxQueryExecutionTime: 30000
+    poolSize: 1

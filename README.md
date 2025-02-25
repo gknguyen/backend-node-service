@@ -51,9 +51,18 @@ npm run start:dev
 npm run start:prod
 ```
 
-# Run test
+## Run test
 
 ```bash
 npm test
 npm run test:e2e
+```
+
+## Run DB migration
+
+### Postgres
+
+```bash
+npm run typeorm:migration:generate --db=<db> ---name=<name>
+npm run typeorm:migration:revert --db=<db>
 ```
