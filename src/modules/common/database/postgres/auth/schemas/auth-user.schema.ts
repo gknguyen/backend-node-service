@@ -12,11 +12,13 @@ export const AuthUserSchema = new EntitySchema<IAuthUser>({
       type: 'uuid',
       primary: true,
       generated: 'uuid',
+      comment: 'Primary key',
     },
     password: {
       type: String,
       length: 100,
       nullable: true,
+      comment: 'Authentication Password',
     },
     ...BaseSchema,
   },

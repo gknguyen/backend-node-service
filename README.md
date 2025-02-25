@@ -32,11 +32,19 @@
 - [NestJS SSE](https://docs.nestjs.com/techniques/server-sent-events)
 - [NestJS Socket.IO](https://docs.nestjs.com/websockets/gateways)
 
-## Message Streaming
+### Message Streaming
 
 - [NestJS Event](https://docs.nestjs.com/techniques/events)
 - [NestJS RabbitMQ](https://docs.nestjs.com/microservices/rabbitmq)
 - [NestJS Kafka](https://docs.nestjs.com/microservices/kafka)
+
+### ORM/ODM
+
+- [TypeORM](https://typeorm.io/)
+
+### Database
+
+- [PostgreSQL](https://www.postgresql.org/)
 
 ## Install
 
