@@ -1,5 +1,6 @@
 export enum EventTypeEnum {
   Base = 'event.emmitted',
+  UserCreated = 'event.user.created',
 }
 
 export enum RabbitPatternEnum {

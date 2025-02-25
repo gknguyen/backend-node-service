@@ -1,10 +1,11 @@
-import { Inject, Module, OnModuleInit } from '@nestjs/common';
+import { Global, Inject, Module, OnModuleInit } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ClientKafka, ClientRMQ, ClientsModule } from '@nestjs/microservices';
 import { logger } from 'src/shared/logger';
 import { EventApiController } from './controllers/event.api.controller';
 import { eventProviders, KAFKA_TOKEN, RABBITMQ_TOKEN } from './shared/event.provider';
 
+@Global()
 @Module({
   imports: [
     EventEmitterModule.forRoot() /** https://docs.nestjs.com/techniques/events */,

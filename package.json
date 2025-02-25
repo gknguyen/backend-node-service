@@ -27,7 +27,11 @@
     "release:as": "npm run release -- --release-as",
     "release:patch": "npm run release:as patch",
     "release:minor": "npm run release:as minor",
-    "release:major": "npm run release:as major"
+    "release:major": "npm run release:as major",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d ./src/modules/common/database/postgres/$npm_config_db/$npm_config_db.provider.ts",
+    "typeorm:migration:generate": "npm run typeorm -- migration:generate ./src/modules/common/database/postgres/$npm_config_db/migrations/$npm_config_name",
+    "typeorm:migration:run": "npm run build && npm run typeorm -- migration:run --transaction each",
+    "typeorm:migration:revert": "npm run typeorm -- migration:revert"
   },
   "engines": {
     "node": "22"
@@ -44,6 +48,7 @@
     "@nestjs/websockets": "^10.4.15",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.5",
+    "bcryptjs": "^3.0.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "config": "^3.3.12",
@@ -52,6 +57,7 @@
     "helmet": "^8.0.0",
     "kafkajs": "^2.2.4",
     "lodash": "^4.17.21",
+    "pg": "^8.13.3",
     "pino": "^9.4.0",
     "pino-pretty": "^11.2.2",
     "reflect-metadata": "^0.1.14",
@@ -59,6 +65,7 @@
     "rxjs": "^7.2.0",
     "string-template": "^1.0.0",
     "stripe": "^17.1.0",
+    "typeorm": "^0.3.20",
     "winston": "^3.15.0"
   },
   "devDependencies": {
