@@ -4,7 +4,7 @@ import { omit } from 'lodash';
 import { AUTH_ERRORS } from 'src/exception/const';
 import { UserInfoRepository } from 'src/modules/common/database/postgres/account/repositories/user-info.repository';
 import { AuthUserRepository } from 'src/modules/common/database/postgres/auth/repositories/auth-user.repository';
-import { EventTypeEnum } from 'src/modules/event/shared/event.const';
+import { EventTypeEnum } from 'src/modules/common/event/shared/event.const';
 import { encodePassword } from '../../shared/auth.util';
 import { IAuthUser, IRegisterAuthUser } from '../shared/user.interface';
 

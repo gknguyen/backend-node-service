@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { EventTypeEnum } from 'src/modules/event/shared/event.const';
+import { EventTypeEnum } from 'src/modules/common/event/shared/event.const';
 import { UserService } from '../services/user.service';
 import { CreateUserInfoDto } from '../shared/user.dto';
 

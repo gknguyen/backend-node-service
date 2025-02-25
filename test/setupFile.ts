@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from 'src/modules/app.module';
-import { KAFKA_TOKEN, RABBITMQ_TOKEN } from 'src/modules/event/shared/event.provider';
-import { STRIPE_TOKEN } from 'src/modules/payment/gateway/stripe/shared/stripe.provider';
+import { KAFKA_TOKEN, RABBITMQ_TOKEN } from 'src/modules/common/event/shared/event.provider';
+import { STRIPE_TOKEN } from 'src/modules/domain/payment/gateway/stripe/shared/stripe.provider';
 import { configureMiddlewares } from 'src/shared/bootstrap';
 import { configureSwagger } from 'src/shared/swagger';
 import { mockDataSource, mockKafkaClient, mockRabbitMQClient, mockStripeClient } from './mock';

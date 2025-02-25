@@ -7,8 +7,8 @@ import {
   EventTypeEnum,
   KafkaTopicEnum,
   RabbitPatternEnum,
-} from '../../../event/shared/event.const';
-import { EmitMessageDto } from '../../../event/shared/event.dto';
+} from 'src/modules/common/event/shared/event.const';
+import { EmitMessageDto } from 'src/modules/common/event/shared/event.dto';
 import { SseService } from '../services/sse.service';
 import { IMessageEvent } from '../shared/interface';
 
