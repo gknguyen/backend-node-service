@@ -23,4 +23,13 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
   },
+  overrides: [
+    {
+      files: ['src/**/schemas/**/*.ts'],
+      plugins: ['custom'],
+      rules: {
+        'custom/required-column-comment': 'error',
+      },
+    },
+  ],
 };

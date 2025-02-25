@@ -3,6 +3,7 @@
 /node_modules
 /coverage*
 /report-*-test
+/eslint-custom-rules
 
 # files
 swagger.json
