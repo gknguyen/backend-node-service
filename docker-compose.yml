@@ -1,15 +1,18 @@
 services:
-  service:
+  app:
     build:
       dockerfile: Dockerfile
       context: .
       target: production
     image: backend-node-service:local
-    container_name: backend-node-service
+    container_name: app
     restart: unless-stopped
     environment:
       - NODE_ENV=production
       - SERVICE_PORT=4200
+      - KAFKA_BROKER=kafka:29092
+      - DATABASE_AUTH_HOST=postgres
+      - DATABASE_ACCOUNT_HOST=postgres
     env_file:
       - .env
     volumes:
@@ -18,6 +21,9 @@ services:
       - backend-network
     ports:
       - 4200:4200
+    depends_on:
+      - kafka
+      - postgres
 
   rabbitmq:
     image: rabbitmq:management

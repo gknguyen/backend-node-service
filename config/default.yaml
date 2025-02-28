@@ -44,6 +44,7 @@ database:
     connectionTimeout: 10000
     maxQueryExecutionTime: 30000
     poolSize: 1
+    migrationsRun: true
   account:
     host: 127.0.0.1
     port: 5432
@@ -54,3 +55,4 @@ database:
     connectionTimeout: 10000
     maxQueryExecutionTime: 30000
     poolSize: 1
+    migrationsRun: true

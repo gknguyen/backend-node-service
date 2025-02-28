@@ -14,7 +14,7 @@ export const AuthDataSource = new DataSource({
   synchronize: false,
   migrationsTableName: 'migrations',
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
-  migrationsRun: true,
+  migrationsRun: ENV.DATABASE.AUTH.MIGRATIONS_RUN,
   migrationsTransactionMode: 'each',
   logger: 'advanced-console',
   connectTimeoutMS: ENV.DATABASE.AUTH.CONNECTION_TIMEOUT,

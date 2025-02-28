@@ -1,8 +1,8 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": "../",
+  "rootDir": "../../",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testMatch": ["**/test/e2e/**/*.spec.ts"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
@@ -41,7 +41,7 @@
       }
     ]
   ],
-  "globalSetup": "<rootDir>/test/globalSetup.ts",
-  "globalTeardown": "<rootDir>/test/globalTeardown.ts",
-  "setupFilesAfterEnv": ["<rootDir>/test/setupFile.ts"]
+  "globalSetup": "<rootDir>/test/e2e/globalSetup.ts",
+  "globalTeardown": "<rootDir>/test/e2e/globalTeardown.ts",
+  "setupFilesAfterEnv": ["<rootDir>/test/e2e/setupFile.ts"]
 }
