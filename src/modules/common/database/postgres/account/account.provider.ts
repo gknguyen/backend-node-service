@@ -14,7 +14,7 @@ export const AccountDataSource = new DataSource({
   synchronize: false,
   migrationsTableName: 'migrations',
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
-  migrationsRun: true,
+  migrationsRun: ENV.DATABASE.ACCOUNT.MIGRATIONS_RUN,
   migrationsTransactionMode: 'each',
   logger: 'advanced-console',
   connectTimeoutMS: ENV.DATABASE.ACCOUNT.CONNECTION_TIMEOUT,

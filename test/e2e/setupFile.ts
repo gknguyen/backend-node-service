@@ -1,11 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from 'src/modules/app.module';
-import { KAFKA_TOKEN, RABBITMQ_TOKEN } from 'src/modules/common/event/shared/event.provider';
 import { STRIPE_TOKEN } from 'src/modules/domain/payment/gateway/stripe/shared/stripe.provider';
 import { configureMiddlewares } from 'src/shared/bootstrap';
 import { configureSwagger } from 'src/shared/swagger';
-import { mockDataSource, mockKafkaClient, mockRabbitMQClient, mockStripeClient } from './mock';
-import { DatabaseDomain } from 'src/modules/common/database/shared/database.const';
+import { mockStripeClient } from './mock';
 
 beforeAll(async () => {
   const module = await Test.createTestingModule({
@@ -13,14 +11,6 @@ beforeAll(async () => {
   })
     .overrideProvider(STRIPE_TOKEN)
     .useValue(mockStripeClient)
-    .overrideProvider(RABBITMQ_TOKEN)
-    .useValue(mockRabbitMQClient)
-    .overrideProvider(KAFKA_TOKEN)
-    .useValue(mockKafkaClient)
-    .overrideProvider(DatabaseDomain.Auth)
-    .useValue(mockDataSource)
-    .overrideProvider(DatabaseDomain.Account)
-    .useValue(mockDataSource)
     .compile();
 
   const app = module.createNestApplication();

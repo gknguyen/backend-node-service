@@ -63,6 +63,9 @@ database:
     poolSize:
       __name: DATABASE_AUTH_POOL_SIZE
       __format: json
+    migrationsRun:
+      __name: DATABASE_AUTH_MIGRATIONS_RUN
+      __format: json
   account:
     host: DATABASE_ACCOUNT_HOST
     port:
@@ -80,4 +83,7 @@ database:
       __format: json
     poolSize:
       __name: DATABASE_ACCOUNT_POOL_SIZE
+      __format: json
+    migrationsRun:
+      __name: DATABASE_ACCOUNT_MIGRATIONS_RUN
       __format: json

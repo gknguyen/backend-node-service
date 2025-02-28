@@ -47,6 +47,7 @@ const ENV = {
       CONNECTION_TIMEOUT: config.get<number>('database.auth.connectionTimeout'),
       MAX_QUERY_EXECUTION_TIME: config.get<number>('database.auth.maxQueryExecutionTime'),
       POOL_SIZE: config.get<number>('database.auth.poolSize'),
+      MIGRATIONS_RUN: config.get<boolean>('database.auth.migrationsRun'),
     },
     ACCOUNT: {
       HOST: config.get<string>('database.account.host'),
@@ -58,6 +59,7 @@ const ENV = {
       CONNECTION_TIMEOUT: config.get<number>('database.account.connectionTimeout'),
       MAX_QUERY_EXECUTION_TIME: config.get<number>('database.account.maxQueryExecutionTime'),
       POOL_SIZE: config.get<number>('database.account.poolSize'),
+      MIGRATIONS_RUN: config.get<boolean>('database.account.migrationsRun'),
     },
   },
 };

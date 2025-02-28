@@ -20,9 +20,8 @@ FROM node:22-alpine AS production
 
 WORKDIR /home/src/app
 
-RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache bash git
+RUN apk update && apk upgrade
+RUN apk add --no-cache bash git
 
 COPY --from=build /home/src/app/node_modules ./node_modules
 COPY --from=build /home/src/app/package.json ./package.json

@@ -1,3 +1,9 @@
 logger:
   enabled: false
   prettyEnabled: false
+
+database:
+  auth:
+    migrationsRun: false
+  account:
+    migrationsRun: false
