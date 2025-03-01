@@ -1,9 +1,50 @@
 import { KafkaContainer } from '@testcontainers/kafka';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { RabbitMQContainer } from '@testcontainers/rabbitmq';
+import { GenericContainer } from 'testcontainers';
 import { promisify } from 'util';
 
 export const wait = promisify(setTimeout);
+
+export async function initAppInstance(): Promise<void> {
+  console.log(process.env.KAFKA_BROKER);
+  console.log(process.env.RABBITMQ_URI);
+  // console.log(process.env.DATABASE_AUTH_HOST);
+  // console.log(process.env.DATABASE_AUTH_PORT);
+  // console.log(process.env.DATABASE_ACCOUNT_HOST);
+  // console.log(process.env.DATABASE_ACCOUNT_PORT);
+
+  const appContainer = await GenericContainer.fromDockerfile('./').build('app', {
+    deleteOnExit: true,
+  });
+
+  await appContainer
+    .withName('app')
+    .withExposedPorts(4300)
+    .withEnvironment({
+      NODE_ENV: 'production',
+      SERVICE_PORT: '4300',
+      // ...(process.env.RABBITMQ_URI && {
+      //   RABBITMQ_URI: process.env.RABBITMQ_URI,
+      // }),
+      ...(process.env.KAFKA_BROKER && {
+        KAFKA_BROKER: process.env.KAFKA_BROKER,
+      }),
+      ...(process.env.DATABASE_AUTH_HOST && {
+        DATABASE_AUTH_HOST: process.env.DATABASE_AUTH_HOST,
+      }),
+      ...(process.env.DATABASE_ACCOUNT_HOST && {
+        DATABASE_ACCOUNT_HOST: process.env.DATABASE_ACCOUNT_HOST,
+      }),
+      RABBITMQ_URI:
+        'amqps://njhhkiwz:EDhqd1C5lYfL6vwWYG18b-ulOc2Xo4WU@armadillo.rmq.cloudamqp.com/njhhkiwz',
+      STRIPE_PUBLIC_KEY:
+        'pk_test_51NnjM1K4XIYVrqWMBKhjJSFWVKzteANmy9y12FV7wRJ7unus7pYRB0NEZM4smmFi4SN72RwnKOJqChbJjeC5T63400hcpJo82v',
+      STRIPE_SECRET_KEY:
+        'sk_test_51NnjM1K4XIYVrqWMrg8akQKSKXDTk6eqsiRoYHILngcB0le8pJjIczeZhsMJv8J4yAJxU8Dq6KDjz2tbv07EQnGH00gWDByL8t',
+    })
+    .start();
+}
 
 export async function initKafkaInstance(): Promise<void> {
   /** use image "confluentinc/cp-kafka" */
@@ -15,7 +56,7 @@ export async function initKafkaInstance(): Promise<void> {
   const host = kafkaContainer.getHost();
   const port = kafkaContainer.getMappedPort(9092);
 
-  process.env['KAFKA_BROKER'] = `${host}:${port}`;
+  process.env.KAFKA_BROKER = `${host}:${port}`;
 
   (global as any).__KAFKA_INSTANCE = kafkaContainer;
 }
@@ -31,7 +72,7 @@ export async function initPostgresInstance(): Promise<void> {
     .start();
 
   const host = postgresContainer.getHost();
-  const port = postgresContainer.getPort();
+  const port = postgresContainer.getMappedPort(5432);
   const database = postgresContainer.getDatabase();
   const user = postgresContainer.getUsername();
   const password = postgresContainer.getPassword();

@@ -74,3 +74,46 @@ npm run test:e2e
 npm run typeorm:migration:generate --db=<db> ---name=<name>
 npm run typeorm:migration:revert --db=<db>
 ```
+
+```bash
+docker network create --driver bridge backend-network
+
+docker run -d --name rabbitmq --network backend-network -p 5672:5672 \
+  rabbitmq
+
+docker run -d --name zookeeper --network backend-network -p 2181:2181 \
+  -e ALLOW_ANONYMOUS_LOGIN=yes \
+  bitnami/zookeeper
+
+docker run -d --name kafka --network backend-network -p 9092:9092 \
+  -e ALLOW_PLAINTEXT_LISTENER=yes \
+  -e KAFKA_BROKER_ID=1 \
+  -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT \
+  -e KAFKA_CFG_LISTENERS=INTERNAL://kafka:29092,LOCAL://kafka:9092 \
+  -e KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:29092,LOCAL://localhost:9092 \
+  -e KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL \
+  -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+  bitnami/kafka
+
+docker run -d --name postgres --network backend-network -p 5432:5432 \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=postgres \
+  postgres
+
+
+docker build --file Dockerfile --target production --tag backend-node-service:local .
+
+docker run -d --name app --network backend-network -p 4200:4200 \
+  -e NODE_ENV=production \
+  -e SERVICE_PORT=4200 \
+  -e STRIPE_PUBLIC_KEY=pk_test_51NnjM1K4XIYVrqWMBKhjJSFWVKzteANmy9y12FV7wRJ7unus7pYRB0NEZM4smmFi4SN72RwnKOJqChbJjeC5T63400hcpJo82v \
+  -e STRIPE_SECRET_KEY=sk_test_51NnjM1K4XIYVrqWMrg8akQKSKXDTk6eqsiRoYHILngcB0le8pJjIczeZhsMJv8J4yAJxU8Dq6KDjz2tbv07EQnGH00gWDByL8t \
+  -e RABBITMQ_URI=amqp://rabbitmq:5672 \
+  -e KAFKA_BROKER=kafka:29092 \
+  -e DATABASE_AUTH_HOST=postgres \
+  -e DATABASE_AUTH_DATABASE=postgres \
+  -e DATABASE_ACCOUNT_HOST=postgres \
+  -e DATABASE_ACCOUNT_DATABASE=postgres \
+  backend-node-service:local
+```

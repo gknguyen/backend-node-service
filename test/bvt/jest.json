@@ -1,0 +1,44 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "../../",
+  "testEnvironment": "node",
+  "testMatch": ["**/test/bvt/**/*.spec.ts"],
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/src/$1",
+    "^test/(.*)$": "<rootDir>/test/$1"
+  },
+  "coverageDirectory": "<rootDir>/coverage-bvt",
+  "collectCoverageFrom": [
+    "<rootDir>/src/**/*.{js,ts}",
+    "!<rootDir>/src/**/*.spec.{js,ts}",
+    "!<rootDir>/src/main.ts",
+    "!**/node_modules/*"
+  ],
+  "reporters": [
+    "default",
+    "github-actions",
+    [
+      "jest-junit",
+      {
+        "outputDirectory": "report-bvt-test",
+        "outputName": "jest-junit.xml",
+        "ancestorSeparator": " › ",
+        "suiteNameTemplate": "{filepath}",
+        "classNameTemplate": "{classname}",
+        "titleTemplate": "{title}"
+      }
+    ],
+    [
+      "jest-html-reporters",
+      {
+        "publicPath": "report-bvt-test",
+        "filename": "jest.html",
+        "expand": true,
+        "openReport": false
+      }
+    ]
+  ]
+}
