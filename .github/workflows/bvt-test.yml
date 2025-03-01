@@ -97,6 +97,8 @@ jobs:
             -e POSTGRES_PASSWORD=postgres \
             -e POSTGRES_DB=postgres \
             postgres
+          sleep 5
+          docker ps -a
           docker exec -i postgres psql -U postgres -c "CREATE DATABASE auth;"
           docker exec -i postgres psql -U postgres -c "CREATE DATABASE account;"
 
