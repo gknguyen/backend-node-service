@@ -7,8 +7,6 @@ import { promisify } from 'util';
 export const wait = promisify(setTimeout);
 
 export async function initAppInstance(): Promise<void> {
-  console.log(process.env.KAFKA_BROKER);
-  console.log(process.env.RABBITMQ_URI);
   // console.log(process.env.DATABASE_AUTH_HOST);
   // console.log(process.env.DATABASE_AUTH_PORT);
   // console.log(process.env.DATABASE_ACCOUNT_HOST);
