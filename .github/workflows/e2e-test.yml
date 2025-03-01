@@ -27,11 +27,16 @@ jobs:
 
       - name: Restore cached node_modules
         uses: actions/cache@v4
+        id: cache-npm
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          path: ${{ github.workspace }}/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node_modules-
+            ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Install dependencies if cache missed
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        run: npm ci --ignore-scripts
 
       - name: Run tests
         if: ${{ always() }}

@@ -1,0 +1,138 @@
+name: BVT Test
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: 'Runner'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+      imageName:
+        type: string
+        required: false
+        default: 'backend-node-service'
+      tag:
+        type: string
+        required: false
+        default: 'latest'
+
+jobs:
+  bvt-test:
+    runs-on: ['${{ inputs.runner }}']
+    timeout-minutes: 5
+
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+
+      - name: Restore cached node_modules
+        uses: actions/cache@v4
+        id: cache-npm
+        with:
+          path: ${{ github.workspace }}/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Install dependencies if cache missed
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        run: npm ci --ignore-scripts
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker Build layers
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/.buildx-cache
+          key: ${{ runner.os }}-docker-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-buildx-${{ github.sha }}
+
+      - name: Create Docker Build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          tags: ${{ inputs.imageName }}:${{ inputs.tag }}
+          push: false
+          cache-from: type=local,src=${{ runner.temp }}/.buildx-cache
+          cache-to: type=local,dest=${{ runner.temp }}/.buildx-cache-new,mode=max
+          outputs: type=docker,dest=/tmp/${{ inputs.imageName }}-${{ inputs.tag }}.tar
+          secrets: |
+            "npmrc=//npm.pkg.github.com/:_authToken=${{ secrets.GH_REGISTRY_PACKAGES }}"
+
+      # Temp fix: https://github.com/docker/build-push-action/issues/252
+      - name: Invalidate old Docker Build cache
+        run: |
+          rm -rf ${{ runner.temp }}/.buildx-cache
+          mv ${{ runner.temp }}/.buildx-cache-new ${{ runner.temp }}/.buildx-cache
+
+      - name: Load container dependencies
+        run: |
+          docker network create --driver bridge backend-network
+          docker run -d --name rabbitmq --network backend-network -p 5672:5672 \
+            rabbitmq
+          docker run -d --name zookeeper --network backend-network -p 2181:2181 \
+            -e ALLOW_ANONYMOUS_LOGIN=yes \
+            bitnami/zookeeper
+          docker run -d --name kafka --network backend-network -p 9092:9092 \
+            -e ALLOW_PLAINTEXT_LISTENER=yes \
+            -e KAFKA_BROKER_ID=1 \
+            -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT \
+            -e KAFKA_CFG_LISTENERS=INTERNAL://kafka:29092,LOCAL://kafka:9092 \
+            -e KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:29092,LOCAL://localhost:9092 \
+            -e KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL \
+            -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+            bitnami/kafka
+          docker run -d --name postgres --network backend-network -p 5432:5432 \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_DB=postgres \
+            postgres
+          sleep 5
+          docker ps -a
+          docker exec -i postgres psql -U postgres -c "CREATE DATABASE auth;"
+          docker exec -i postgres psql -U postgres -c "CREATE DATABASE account;"
+
+      - name: Load & Run Docker Build
+        run: |
+          docker load --input /tmp/${{ inputs.imageName }}-${{ inputs.tag }}.tar
+          docker image ls -a
+          docker run -d --name app --network backend-network -p 4200:4200 \
+            -e NODE_ENV=production \
+            -e SERVICE_PORT=4200 \
+            -e RABBITMQ_URI=amqp://rabbitmq:5672 \
+            -e KAFKA_BROKER=kafka:29092 \
+            -e DATABASE_AUTH_HOST=postgres \
+            -e DATABASE_ACCOUNT_HOST=postgres \
+            -e STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }} \
+            -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
+            ${{ inputs.imageName }}:${{ inputs.tag }}
+          sleep 15
+          docker logs app
+
+      - name: Run tests
+        if: ${{ always() }}
+        run: npm run test:bvt:ci
+
+      - name: BVT test report
+        uses: dorny/test-reporter@v1
+        if: ${{ always() }}
+        with:
+          name: BVT test report
+          path: report-bvt-test/*.xml
+          reporter: jest-junit
+
+      - name: Cleanup Docker Builds
+        run: |
+          docker stop $(docker ps -q)
+          docker rm $(docker ps -a -q)
+          docker network rm backend-network

@@ -12,7 +12,9 @@ services:
       - SERVICE_PORT=4200
       - KAFKA_BROKER=kafka:29092
       - DATABASE_AUTH_HOST=postgres
+      - DATABASE_AUTH_DATABASE=postgres
       - DATABASE_ACCOUNT_HOST=postgres
+      - DATABASE_ACCOUNT_DATABASE=postgres
     env_file:
       - .env
     volumes:
@@ -39,7 +41,6 @@ services:
   zookeeper:
     image: bitnami/zookeeper
     container_name: zookeeper
-    tmpfs: /datalog
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:

@@ -15,7 +15,7 @@ export async function initKafkaInstance(): Promise<void> {
   const host = kafkaContainer.getHost();
   const port = kafkaContainer.getMappedPort(9092);
 
-  process.env['KAFKA_BROKER'] = `${host}:${port}`;
+  process.env.KAFKA_BROKER = `${host}:${port}`;
 
   (global as any).__KAFKA_INSTANCE = kafkaContainer;
 }
@@ -31,7 +31,7 @@ export async function initPostgresInstance(): Promise<void> {
     .start();
 
   const host = postgresContainer.getHost();
-  const port = postgresContainer.getPort();
+  const port = postgresContainer.getMappedPort(5432);
   const database = postgresContainer.getDatabase();
   const user = postgresContainer.getUsername();
   const password = postgresContainer.getPassword();

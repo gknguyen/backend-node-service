@@ -33,3 +33,9 @@ jobs:
     uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
     needs: [prepare]
+
+  bvt-test:
+    name: BVT Test
+    uses: ./.github/workflows/bvt-test.yml
+    secrets: inherit
+    needs: [prepare]
