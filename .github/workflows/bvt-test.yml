@@ -97,6 +97,8 @@ jobs:
             -e POSTGRES_PASSWORD=postgres \
             -e POSTGRES_DB=postgres \
             postgres
+          docker exec -i postgres psql -U postgres -c "CREATE DATABASE auth;"
+          docker exec -i postgres psql -U postgres -c "CREATE DATABASE account;"
 
       - name: Load & Run Docker Build
         run: |
@@ -108,13 +110,11 @@ jobs:
             -e RABBITMQ_URI=amqp://rabbitmq:5672 \
             -e KAFKA_BROKER=kafka:29092 \
             -e DATABASE_AUTH_HOST=postgres \
-            -e DATABASE_AUTH_DATABASE=postgres \
             -e DATABASE_ACCOUNT_HOST=postgres \
-            -e DATABASE_ACCOUNT_DATABASE=postgres \
             -e STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }} \
             -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
             ${{ inputs.imageName }}:${{ inputs.tag }}
-          sleep 10
+          sleep 15
           docker logs app
 
       - name: Run tests
