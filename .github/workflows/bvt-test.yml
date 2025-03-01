@@ -111,6 +111,8 @@ jobs:
             -e DATABASE_AUTH_DATABASE=postgres \
             -e DATABASE_ACCOUNT_HOST=postgres \
             -e DATABASE_ACCOUNT_DATABASE=postgres \
+            -e STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }} \
+            -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
             ${{ inputs.imageName }}:${{ inputs.tag }}
           sleep 5
           docker logs app
