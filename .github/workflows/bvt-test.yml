@@ -112,6 +112,8 @@ jobs:
             -e DATABASE_ACCOUNT_HOST=postgres \
             -e DATABASE_ACCOUNT_DATABASE=postgres \
             ${{ inputs.imageName }}:${{ inputs.tag }}
+          sleep 5
+          docker logs app
 
       - name: Run tests
         if: ${{ always() }}
