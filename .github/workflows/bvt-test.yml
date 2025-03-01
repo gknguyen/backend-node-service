@@ -114,7 +114,7 @@ jobs:
             -e STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }} \
             -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
             ${{ inputs.imageName }}:${{ inputs.tag }}
-          sleep 5
+          sleep 10
           docker logs app
 
       - name: Run tests
