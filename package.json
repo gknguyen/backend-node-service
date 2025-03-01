@@ -23,7 +23,7 @@
     "test:e2e:cov": "npm run test:e2e -- --coverage",
     "test:e2e:ci": "npm run test:e2e:cov -- --ci --json --testLocationInResults --outputFile=coverage-e2e/jest-coverage.json",
     "test:bvt": "jest --config ./test/bvt/jest.json --runInBand --forceExit",
-    "test:bvt:ci": "npm run test:bvt -- --ci --json --testLocationInResults --outputFile=coverage-bvt/jest-coverage.json",
+    "test:bvt:ci": "npm run test:bvt -- --ci --json --testLocationInResults",
     "prepare": "husky",
     "release": "standard-version -s -t '' --no-verify",
     "release:as": "npm run release -- --release-as",
