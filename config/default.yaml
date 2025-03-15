@@ -56,3 +56,7 @@ database:
     maxQueryExecutionTime: 30000
     poolSize: 1
     migrationsRun: true
+
+jwt:
+  secret:
+  expiresIn: 1h

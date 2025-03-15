@@ -87,3 +87,7 @@ database:
     migrationsRun:
       __name: DATABASE_ACCOUNT_MIGRATIONS_RUN
       __format: json
+
+jwt:
+  secret: JWT_SECRET
+  expiresIn: JWT_EXPIRES_IN

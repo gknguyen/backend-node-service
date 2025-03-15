@@ -1,4 +1,4 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { json, urlencoded } from 'express';
 import * as httpContext from 'express-http-context';
@@ -17,8 +17,17 @@ export function configureMiddlewares(app: INestApplication) {
   app.use(json());
   app.use(httpContext.middleware);
   app.use(responseTime({ header: 'x-response-time' }));
-  app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+      validationError: {
+        target: true,
+        value: true,
+      },
+    }),
+  );
 }
 
 export async function configureMicroservices(app: INestApplication) {

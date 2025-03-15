@@ -62,6 +62,10 @@ const ENV = {
       MIGRATIONS_RUN: config.get<boolean>('database.account.migrationsRun'),
     },
   },
+  JWT: {
+    SECRET: config.get<string>('jwt.secret'),
+    EXPIRES_IN: config.get<string>('jwt.expiresIn'),
+  },
 };
 
 export default ENV;

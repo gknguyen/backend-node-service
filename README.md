@@ -55,6 +55,8 @@ npm ci
 ## Run service
 
 ```bash
+docker-compose up -d rabbitmq kafka postgres
+
 npm run start:dev
 npm run start:prod
 ```

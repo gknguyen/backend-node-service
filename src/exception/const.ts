@@ -20,4 +20,12 @@ export const AUTH_ERRORS = {
     message: 'User already existed.',
     statusCode: HttpStatus.BAD_REQUEST,
   },
+  USER_NOT_EXISTED: {
+    message: 'User not existed.',
+    statusCode: HttpStatus.NOT_FOUND,
+  },
+  INVALID_PASSWORD: {
+    message: 'password incorrect.',
+    statusCode: HttpStatus.UNAUTHORIZED,
+  },
 };
