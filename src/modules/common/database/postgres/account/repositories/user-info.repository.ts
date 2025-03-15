@@ -18,4 +18,8 @@ export class UserInfoRepository {
   async checkExistedByEmail(email: string): Promise<boolean> {
     return this.repository.exists({ where: { email } });
   }
+
+  async getByEmail(email: string): Promise<IUserInfo | null> {
+    return this.repository.findOne({ where: { email } });
+  }
 }

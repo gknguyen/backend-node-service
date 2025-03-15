@@ -18,4 +18,8 @@ export class AuthUserRepository {
   async checkExistedByUserId(userId: string): Promise<boolean> {
     return this.repository.exists({ where: { userId } });
   }
+
+  async getByUserId(userId: string): Promise<IAuthUser | null> {
+    return this.repository.findOne({ where: { userId } });
+  }
 }

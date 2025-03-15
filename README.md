@@ -11,6 +11,7 @@
 - Pre-commit checker: [CommitLint](https://commitlint.js.org/) + [Husky](https://typicode.github.io/husky/)
 - API docs: [Swagger UI](https://swagger.io/tools/swagger-ui/)
 - ENV manager: [config](https://github.com/node-config/node-config) + [dotenv](https://github.com/motdotla/dotenv)
+- Authentication: [jsonwebtoken](https://jwt.io/) + [bcryptjs](https://www.npmjs.com/package/bcryptjs)
 
 ### Testing:
 
@@ -55,6 +56,8 @@ npm ci
 ## Run service
 
 ```bash
+docker-compose up -d rabbitmq kafka postgres
+
 npm run start:dev
 npm run start:prod
 ```
