@@ -42,10 +42,12 @@
 ### ORM/ODM
 
 - [TypeORM](https://typeorm.io/)
+- [mongoose](https://mongoosejs.com/)
 
 ### Database
 
 - [PostgreSQL](https://www.postgresql.org/)
+- [MongoDB](https://www.mongodb.com/)
 
 ## Install
 
@@ -53,11 +55,21 @@
 npm ci
 ```
 
+## Start dependency containers
+
+```bash
+docker-compose up -d postgres mongo kafka rabbitmq
+```
+
+### Setup mongo in cluster mode
+
+```bash
+docker-compose exec -it mongo mongosh --eval 'rs.initiate({ _id: "mongo-set", members: [{ _id: 0, host: "mongo:27017" }]})'
+```
+
 ## Run service
 
 ```bash
-docker-compose up -d rabbitmq kafka postgres
-
 npm run start:dev
 npm run start:prod
 ```
@@ -75,6 +87,26 @@ npm run test:bvt
 ### Postgres
 
 ```bash
-npm run typeorm:migration:generate --db=<db> ---name=<name>
-npm run typeorm:migration:revert --db=<db>
+# generate new migration file
+npm run migration:typeorm:generate --db=<db> ---name=<name>
+
+# revert migration
+npm run migration:typeorm:revert --db=<db>
+```
+
+### MongoDB
+
+```bash
+# generate new migration file
+npm run migration:mongo:generate --db=<db> ---name=<name>
+
+# run migration
+npm run migration:mongo:up --db=<db>
+
+# revert migration
+npm run migration:mongo:down --db=<db> -- --last  #Undo the last applied migration
+npm run migration:mongo:down --db=<db> -- --all   #Undo all applied migrations
+
+# check migration status
+npm run migration:mongo:status --db=<db>
 ```
