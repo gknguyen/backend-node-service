@@ -2,6 +2,7 @@ import { KafkaContainer } from '@testcontainers/kafka';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { RabbitMQContainer } from '@testcontainers/rabbitmq';
 import { promisify } from 'util';
+import { MongoMemoryReplSet } from 'mongodb-memory-server';
 
 export const wait = promisify(setTimeout);
 
@@ -52,4 +53,39 @@ export async function initRabbitMQInstance(): Promise<void> {
   process.env.RABBITMQ_URI = rabbitMQContainer.getAmqpUrl();
 
   (global as any).__RABBITMQ_INSTANCE = rabbitMQContainer;
+}
+
+export async function initMongoInstance(): Promise<void> {
+  const mongoServer = await MongoMemoryReplSet.create({
+    replSet: {
+      count: 1,
+      storageEngine: 'wiredTiger',
+    },
+    binary: {
+      version: '8.0.5',
+      downloadDir: 'node_modules/.cache/mongodb-memory-server/mongodb-binaries',
+    },
+  });
+
+  const uri = mongoServer.getUri();
+  const { host, port } = parseMongoURI(uri);
+
+  process.env.MONGODB_AUTH_HOST = host;
+  process.env.MONGODB_AUTH_PORT = port;
+
+  (global as any).__MONGO_INSTANCE = mongoServer;
+}
+
+function parseMongoURI(uri: string) {
+  const regex = /mongodb:\/\/(?<host>[^:\/]+)(?::(?<port>\d+))?\/?(?:\?(?<params>.*))?/;
+  const match = uri.match(regex);
+
+  if (!match || !match.groups) {
+    throw new Error('Invalid MongoDB URI');
+  }
+
+  return {
+    host: match.groups.host,
+    port: match.groups.port || '27017', // Default MongoDB port
+  };
 }
