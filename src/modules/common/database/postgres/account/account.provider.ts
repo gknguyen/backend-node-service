@@ -1,6 +1,6 @@
 import ENV from 'src/shared/env';
 import { DataSource } from 'typeorm';
-import { DatabaseDomain } from '../../shared/database.const';
+import { DatabaseDomain, POSTGRES_ACCOUNT_TOKEN } from '../../shared/database.const';
 
 export const AccountDataSource = new DataSource({
   type: 'postgres',
@@ -24,6 +24,6 @@ export const AccountDataSource = new DataSource({
 });
 
 export const AccountDatabaseProvider = {
-  provide: DatabaseDomain.Account,
+  provide: POSTGRES_ACCOUNT_TOKEN,
   useFactory: () => AccountDataSource,
 };

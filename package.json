@@ -60,6 +60,7 @@
     "jsonwebtoken": "^9.0.2",
     "kafkajs": "^2.2.4",
     "lodash": "^4.17.21",
+    "mongoose": "^8.12.1",
     "pg": "^8.13.3",
     "pino": "^9.4.0",
     "pino-pretty": "^11.2.2",

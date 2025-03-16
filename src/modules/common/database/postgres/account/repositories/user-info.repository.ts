@@ -1,5 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DatabaseDomain, TableName } from 'src/modules/common/database/shared/database.const';
+import {
+  POSTGRES_ACCOUNT_TOKEN,
+  TableName,
+} from 'src/modules/common/database/shared/database.const';
 import { IUserInfo } from 'src/modules/domain/account/user/shared/user.interface';
 import { DataSource, Repository } from 'typeorm';
 
@@ -7,7 +10,7 @@ import { DataSource, Repository } from 'typeorm';
 export class UserInfoRepository {
   private repository: Repository<IUserInfo>;
 
-  constructor(@Inject(DatabaseDomain.Account) private readonly dataSource: DataSource) {
+  constructor(@Inject(POSTGRES_ACCOUNT_TOKEN) private readonly dataSource: DataSource) {
     this.repository = this.dataSource.getRepository<IUserInfo>(TableName.UserInfo);
   }
 

@@ -1,4 +1,4 @@
-import { AccountDatabaseProvider } from '../postgres/account/account.provider';
-import { AuthDatabaseProvider } from '../postgres/auth/auth.provider';
+import { MongoProviders } from '../mongo/mongo.provider';
+import { PostgresProviders } from '../postgres/postgres.provider';
 
-export const DatabaseProviders = [AuthDatabaseProvider, AccountDatabaseProvider];
+export const DatabaseProviders = [...PostgresProviders, ...MongoProviders];

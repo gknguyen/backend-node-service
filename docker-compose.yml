@@ -87,6 +87,21 @@ services:
     networks:
       - backend-network
 
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: on-failure
+    environment:
+      - MASTER=mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+    networks:
+      - backend-network
+    command: mongod --replSet mongo-set
+
 networks:
   backend-network:
     name: backend-network
@@ -110,4 +125,10 @@ volumes:
     driver: local
   postgres-subdata:
     name: postgres-subdata
+    driver: local
+  mongo-data:
+    name: mongo-data
+    driver: local
+  mongo-config:
+    name: mongo-config
     driver: local
