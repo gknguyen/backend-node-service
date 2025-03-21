@@ -78,15 +78,18 @@ jobs:
       - name: Load container dependencies
         run: |
           docker network create --driver bridge backend-network
+
           docker run -d --name rabbitmq --network backend-network -p 5672:5672 \
             --health-cmd "rabbitmq-diagnostics check_port_connectivity" \
             --health-interval 10s \
             --health-timeout 5s \
             --health-retries 3 \
             rabbitmq
+
           docker run -d --name zookeeper --network backend-network -p 2181:2181 \
             -e ALLOW_ANONYMOUS_LOGIN=yes \
             bitnami/zookeeper
+
           docker run -d --name kafka --network backend-network -p 9092:9092 \
             -e ALLOW_PLAINTEXT_LISTENER=yes \
             -e KAFKA_BROKER_ID=1 \
@@ -100,6 +103,7 @@ jobs:
             --health-timeout 5s \
             --health-retries 10 \
             bitnami/kafka
+
           docker run -d --name postgres --network backend-network -p 5432:5432 \
             -e POSTGRES_USER=postgres \
             -e POSTGRES_PASSWORD=postgres \
@@ -109,6 +113,7 @@ jobs:
             --health-timeout 5s \
             --health-retries 5 \
             postgres
+
           docker run -d --name mongo --network backend-network -p 27017:27017 \
             -e MASTER=mongo \
             --health-cmd "mongosh --eval 'db.runCommand(\"ping\").ok' --quiet | grep 1" \
@@ -118,11 +123,38 @@ jobs:
             mongo \
             mongod --replSet mongo-set
 
+          until [ "$(docker inspect -f {{.State.Health.Status}} rabbitmq)" == "healthy" ]; do
+            echo "Waiting for RabbitMQ..."
+            sleep 3
+          done
+
+          until [ "$(docker inspect -f {{.State.Health.Status}} zookeeper)" == "healthy" ]; do
+            echo "Waiting for Zookeeper..."
+            sleep 3
+          done
+
+          # Wait for Kafka to be ready
+          until [ "$(docker inspect -f {{.State.Health.Status}} kafka)" == "healthy" ]; do
+            echo "Waiting for Kafka..."
+            sleep 3
+          done
+
+          until [ "$(docker inspect -f {{.State.Health.Status}} postgres)" == "healthy" ]; do
+            echo "Waiting for Postgres..."
+            sleep 3
+          done
+
+          until [ "$(docker inspect -f {{.State.Health.Status}} mongo)" == "healthy" ]; do
+            echo "Waiting for Mongo..."
+            sleep 3
+          done
+
       - name: Containers additional setup
         run: |
           docker ps -a
           docker exec -i postgres psql -U postgres -c "CREATE DATABASE auth;"
           docker exec -i postgres psql -U postgres -c "CREATE DATABASE account;"
+          docker exec -i mongo mongosh --eval 'rs.initiate({ _id: "mongo-set", members: [{ _id: 0, host: "mongo:27017" }]})'
 
       - name: Load & Run Docker Build
         run: |
