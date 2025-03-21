@@ -79,6 +79,10 @@ jobs:
         run: |
           docker network create --driver bridge backend-network
           docker run -d --name rabbitmq --network backend-network -p 5672:5672 \
+            --health-cmd "rabbitmq-diagnostics check_port_connectivity" \
+            --health-interval 10s \
+            --health-timeout 5s \
+            --health-retries 3 \
             rabbitmq
           docker run -d --name zookeeper --network backend-network -p 2181:2181 \
             -e ALLOW_ANONYMOUS_LOGIN=yes \
@@ -91,13 +95,31 @@ jobs:
             -e KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:29092,LOCAL://localhost:9092 \
             -e KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL \
             -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+            --health-cmd "kafka-topics.sh --bootstrap-server kafka:9092 --list || exit 1"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 10
             bitnami/kafka
           docker run -d --name postgres --network backend-network -p 5432:5432 \
             -e POSTGRES_USER=postgres \
             -e POSTGRES_PASSWORD=postgres \
             -e POSTGRES_DB=postgres \
+            --health-cmd pg_isready \
+            --health-interval 10s \
+            --health-timeout 5s \
+            --health-retries 5 \
             postgres
-          sleep 5
+          docker run -d --name mongo --network backend-network -p 27017:27017 \
+            -e MASTER=mongo \
+            --health-cmd "mongosh --eval 'db.runCommand(\"ping\").ok' --quiet | grep 1" \
+            --health-interval 10s \
+            --health-timeout 5s \
+            --health-retries 3 \
+            mongo \
+            mongod --replSet mongo-set
+
+      - name: Containers additional setup
+        run: |
           docker ps -a
           docker exec -i postgres psql -U postgres -c "CREATE DATABASE auth;"
           docker exec -i postgres psql -U postgres -c "CREATE DATABASE account;"
@@ -113,6 +135,7 @@ jobs:
             -e KAFKA_BROKER=kafka:29092 \
             -e DATABASE_AUTH_HOST=postgres \
             -e DATABASE_ACCOUNT_HOST=postgres \
+            -e MONGODB_AUTH_HOST=mongo \
             -e STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }} \
             -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
             ${{ inputs.imageName }}:${{ inputs.tag }}
