@@ -31,9 +31,14 @@
     "release:minor": "npm run release:as minor",
     "release:major": "npm run release:as major",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d ./src/modules/common/database/postgres/$npm_config_db/$npm_config_db.provider.ts",
-    "typeorm:migration:generate": "npm run typeorm -- migration:generate ./src/modules/common/database/postgres/$npm_config_db/migrations/$npm_config_name",
-    "typeorm:migration:run": "npm run build && npm run typeorm -- migration:run --transaction each",
-    "typeorm:migration:revert": "npm run typeorm -- migration:revert"
+    "migration:typeorm:generate": "npm run typeorm -- migration:generate ./src/modules/common/database/postgres/$npm_config_db/migrations/$npm_config_name",
+    "migration:typeorm:run": "npm run build && npm run typeorm -- migration:run --transaction each",
+    "migration:typeorm:revert": "npm run typeorm -- migration:revert",
+    "migration:mongo:generate": "ts-node src/modules/common/database/mongo/$npm_config_db/migrate-cli.ts new --name $npm_config_name",
+    "migration:mongo": "node dist/modules/common/database/mongo/$npm_config_db/migrate-cli.js",
+    "migration:mongo:up": "npm run migration:mongo -- up",
+    "migration:mongo:down": "npm run migration:mongo -- down",
+    "migration:mongo:status": "npm run migration:mongo -- status"
   },
   "engines": {
     "node": "22"
@@ -60,6 +65,8 @@
     "jsonwebtoken": "^9.0.2",
     "kafkajs": "^2.2.4",
     "lodash": "^4.17.21",
+    "mongo-migrate-ts": "^1.6.2",
+    "mongoose": "^8.12.1",
     "pg": "^8.13.3",
     "pino": "^9.4.0",
     "pino-pretty": "^11.2.2",
@@ -101,6 +108,7 @@
     "jest": "29.5.0",
     "jest-html-reporters": "^3.1.7",
     "jest-junit": "^16.0.0",
+    "mongodb-memory-server": "^10.1.4",
     "prettier": "^2.8.8",
     "rimraf": "^6.0.1",
     "source-map-support": "^0.5.21",

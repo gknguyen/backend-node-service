@@ -62,6 +62,21 @@ const ENV = {
       MIGRATIONS_RUN: config.get<boolean>('database.account.migrationsRun'),
     },
   },
+  MONGODB: {
+    AUTH: {
+      HOST: config.get<string>('mongodb.auth.host'),
+      PORT: config.get<number>('mongodb.auth.port'),
+      USERNAME: config.get<string>('mongodb.auth.user'),
+      PASSWORD: config.get<string>('mongodb.auth.password'),
+      DATABASE: config.get<string>('mongodb.auth.database'),
+      DIRECT_CONNECTION: config.get<boolean>('mongodb.auth.directConnection'),
+    },
+  },
+  DATA_MODEL: {
+    USER_SESSION: {
+      DELETE_AT: config.get<number>('dataModel.userSession.deleteAt'),
+    },
+  },
   JWT: {
     SECRET: config.get<string>('jwt.secret'),
     EXPIRES_IN: config.get<string>('jwt.expiresIn'),

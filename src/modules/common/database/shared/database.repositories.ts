@@ -1,4 +1,4 @@
-import { UserInfoRepository } from '../postgres/account/repositories/user-info.repository';
-import { AuthUserRepository } from '../postgres/auth/repositories/auth-user.repository';
+import { MongoRepositories } from '../mongo/mongo.repository';
+import { PostgresRepositories } from '../postgres/postgres.repository';
 
-export const DatabaseRepositories = [AuthUserRepository, UserInfoRepository];
+export const DatabaseRepositories = [...PostgresRepositories, ...MongoRepositories];

@@ -1,5 +1,15 @@
-import { initKafkaInstance, initPostgresInstance, initRabbitMQInstance } from '../utils';
+import {
+  initKafkaInstance,
+  initPostgresInstance,
+  initRabbitMQInstance,
+  initMongoInstance,
+} from '../utils';
 
 export = async () => {
-  await Promise.all([initKafkaInstance(), initPostgresInstance(), initRabbitMQInstance()]);
+  await Promise.all([
+    initKafkaInstance(),
+    initPostgresInstance(),
+    initRabbitMQInstance(),
+    initMongoInstance(),
+  ]);
 };

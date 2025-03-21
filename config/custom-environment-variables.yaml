@@ -88,6 +88,25 @@ database:
       __name: DATABASE_ACCOUNT_MIGRATIONS_RUN
       __format: json
 
+mongodb:
+  auth:
+    host: MONGODB_AUTH_HOST
+    port:
+      __name: MONGODB_AUTH_PORT
+      __format: json
+    user: MONGODB_AUTH_USER
+    password: MONGODB_AUTH_PASSWORD
+    database: MONGODB_AUTH_DATABASE
+    directConnection:
+      __name: MONGODB_AUTH_DIRECT_CONNECTION
+      __format: json
+
+dataModel:
+  userSession:
+    deleteAt:
+      __name: DATA_MODEL_USER_SESSION_DELETE_AT
+      __format: json
+
 jwt:
   secret: JWT_SECRET
   expiresIn: JWT_EXPIRES_IN

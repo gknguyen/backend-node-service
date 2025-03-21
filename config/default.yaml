@@ -57,6 +57,19 @@ database:
     poolSize: 1
     migrationsRun: true
 
+mongodb:
+  auth:
+    host: 127.0.0.1
+    port: 27017
+    user:
+    password:
+    database: auth
+    directConnection: false
+
+dataModel:
+  userSession:
+    deleteAt: 31536000 # 365 days
+
 jwt:
   secret:
   expiresIn: 1h
