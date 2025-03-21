@@ -28,16 +28,28 @@ export class DatabaseModule implements OnModuleInit {
     await Promise.all([
       this.authDataSource
         .initialize()
-        .then(() => logger.info(`Connected to DB: ${ENV.DATABASE.AUTH.DATABASE}`))
+        .then(() =>
+          logger.info(
+            `Connected to PostgresDB: ${ENV.DATABASE.AUTH.HOST} [${ENV.DATABASE.AUTH.DATABASE}]`,
+          ),
+        )
         .catch((err) => {
-          logger.error(`Failed to connect to DB: ${ENV.DATABASE.AUTH.DATABASE}`);
+          logger.error(
+            `Failed to connect to PostgresDB: ${ENV.DATABASE.AUTH.HOST} [${ENV.DATABASE.AUTH.DATABASE}]`,
+          );
           throw err;
         }),
       this.accountDataSource
         .initialize()
-        .then(() => logger.info(`Connected to DB: ${ENV.DATABASE.ACCOUNT.DATABASE}`))
+        .then(() =>
+          logger.info(
+            `Connected to PostgresDB: ${ENV.DATABASE.ACCOUNT.HOST} [${ENV.DATABASE.AUTH.DATABASE}]`,
+          ),
+        )
         .catch((err) => {
-          logger.error(`Failed to connect to DB: ${ENV.DATABASE.ACCOUNT.DATABASE}`);
+          logger.error(
+            `Failed to connect to PostgresDB: ${ENV.DATABASE.ACCOUNT.HOST} [${ENV.DATABASE.AUTH.DATABASE}]`,
+          );
           throw err;
         }),
     ]);
