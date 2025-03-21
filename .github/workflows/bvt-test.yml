@@ -123,26 +123,6 @@ jobs:
             mongo \
             mongod --replSet mongo-set
 
-          until [ "$(docker inspect -f {{.State.Health.Status}} rabbitmq)" == "healthy" ]; do
-            echo "Waiting for RabbitMQ..."
-            sleep 3
-          done
-
-          until [ "$(docker inspect -f {{.State.Health.Status}} kafka)" == "healthy" ]; do
-            echo "Waiting for Kafka..."
-            sleep 3
-          done
-
-          until [ "$(docker inspect -f {{.State.Health.Status}} postgres)" == "healthy" ]; do
-            echo "Waiting for Postgres..."
-            sleep 3
-          done
-
-          until [ "$(docker inspect -f {{.State.Health.Status}} mongo)" == "healthy" ]; do
-            echo "Waiting for Mongo..."
-            sleep 3
-          done
-
       - name: Containers additional setup
         run: |
           docker ps -a
