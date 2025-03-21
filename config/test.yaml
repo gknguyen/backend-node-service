@@ -2,7 +2,7 @@ logger:
   enabled: false
   prettyEnabled: false
 
-database:
+postgres:
   auth:
     migrationsRun: false
   account:

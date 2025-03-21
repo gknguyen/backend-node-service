@@ -33,7 +33,7 @@ rabbitmq:
 kafka:
   broker: 127.0.0.1:9092
 
-database:
+postgres:
   auth:
     host: 127.0.0.1
     port: 5432

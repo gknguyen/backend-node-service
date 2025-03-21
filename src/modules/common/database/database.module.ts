@@ -30,12 +30,12 @@ export class DatabaseModule implements OnModuleInit {
         .initialize()
         .then(() =>
           logger.info(
-            `Connected to PostgresDB: ${ENV.DATABASE.AUTH.HOST} [${ENV.DATABASE.AUTH.DATABASE}]`,
+            `Connected to PostgresDB: ${ENV.POSTGRES.AUTH.HOST} [${ENV.POSTGRES.AUTH.DATABASE}]`,
           ),
         )
         .catch((err) => {
           logger.error(
-            `Failed to connect to PostgresDB: ${ENV.DATABASE.AUTH.HOST} [${ENV.DATABASE.AUTH.DATABASE}]`,
+            `Failed to connect to PostgresDB: ${ENV.POSTGRES.AUTH.HOST} [${ENV.POSTGRES.AUTH.DATABASE}]`,
           );
           throw err;
         }),
@@ -43,12 +43,12 @@ export class DatabaseModule implements OnModuleInit {
         .initialize()
         .then(() =>
           logger.info(
-            `Connected to PostgresDB: ${ENV.DATABASE.ACCOUNT.HOST} [${ENV.DATABASE.AUTH.DATABASE}]`,
+            `Connected to PostgresDB: ${ENV.POSTGRES.ACCOUNT.HOST} [${ENV.POSTGRES.AUTH.DATABASE}]`,
           ),
         )
         .catch((err) => {
           logger.error(
-            `Failed to connect to PostgresDB: ${ENV.DATABASE.ACCOUNT.HOST} [${ENV.DATABASE.AUTH.DATABASE}]`,
+            `Failed to connect to PostgresDB: ${ENV.POSTGRES.ACCOUNT.HOST} [${ENV.POSTGRES.AUTH.DATABASE}]`,
           );
           throw err;
         }),

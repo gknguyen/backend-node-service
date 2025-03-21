@@ -37,11 +37,11 @@ export async function initPostgresInstance(): Promise<void> {
   const user = postgresContainer.getUsername();
   const password = postgresContainer.getPassword();
 
-  process.env.DATABASE_AUTH_HOST = process.env.DATABASE_ACCOUNT_HOST = host;
-  process.env.DATABASE_AUTH_PORT = process.env.DATABASE_ACCOUNT_PORT = port.toString();
-  process.env.DATABASE_AUTH_USER = process.env.DATABASE_ACCOUNT_USER = user;
-  process.env.DATABASE_AUTH_PASSWORD = process.env.DATABASE_ACCOUNT_PASSWORD = password;
-  process.env.DATABASE_AUTH_DATABASE = process.env.DATABASE_ACCOUNT_DATABASE = database;
+  process.env.POSTGRES_AUTH_HOST = process.env.POSTGRES_ACCOUNT_HOST = host;
+  process.env.POSTGRES_AUTH_PORT = process.env.POSTGRES_ACCOUNT_PORT = port.toString();
+  process.env.POSTGRES_AUTH_USER = process.env.POSTGRES_ACCOUNT_USER = user;
+  process.env.POSTGRES_AUTH_PASSWORD = process.env.POSTGRES_ACCOUNT_PASSWORD = password;
+  process.env.POSTGRES_AUTH_DATABASE = process.env.POSTGRES_ACCOUNT_DATABASE = database;
 
   (global as any).__POSTGRES_INSTANCE = postgresContainer;
 }
