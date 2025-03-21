@@ -88,6 +88,10 @@ jobs:
 
           docker run -d --name zookeeper --network backend-network -p 2181:2181 \
             -e ALLOW_ANONYMOUS_LOGIN=yes \
+            --health-cmd "echo ruok | nc 127.0.0.1 2181 | grep imok" \
+            --health-interval 10s \
+            --health-timeout 5s \
+            --health-retries 3 \
             bitnami/zookeeper
 
           docker run -d --name kafka --network backend-network -p 9092:9092 \
