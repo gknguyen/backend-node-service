@@ -55,7 +55,7 @@ jobs:
           path: ${{ runner.temp }}/.buildx-cache
           key: ${{ runner.os }}-docker-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-docker-buildx-${{ github.sha }}
+            ${{ runner.os }}-docker-buildx-${{ github.sha }}-
 
       - name: Create Docker Build
         uses: docker/build-push-action@v6
@@ -122,6 +122,8 @@ jobs:
             --health-retries 3 \
             mongo \
             mongod --replSet mongo-set
+
+          sleep 10
 
       - name: Containers additional setup
         run: |
