@@ -24,8 +24,10 @@ services:
     ports:
       - 4200:4200
     depends_on:
+      - rabbitmq
       - kafka
       - postgres
+      - mongo
 
   rabbitmq:
     image: rabbitmq:management

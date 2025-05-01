@@ -2,6 +2,12 @@ logger:
   enabled: false
   prettyEnabled: false
 
+rabbitmq:
+  isCustomClient: false
+
+kafka:
+  isCustomClient: false
+
 postgres:
   auth:
     migrationsRun: false
