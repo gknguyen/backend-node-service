@@ -32,9 +32,11 @@ const ENV = {
   },
   RABBITMQ: {
     URI: config.get<string>('rabbitmq.uri'),
+    IS_CUSTOM_CLIENT: config.get<boolean>('rabbitmq.isCustomClient'),
   },
   KAFKA: {
     BROKER: config.get<string>('kafka.broker'),
+    IS_CUSTOM_CLIENT: config.get<boolean>('kafka.isCustomClient'),
   },
   POSTGRES: {
     AUTH: {

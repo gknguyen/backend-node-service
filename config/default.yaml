@@ -17,7 +17,8 @@ logger:
     enabled: true
     censor: '******'
     paths:
-      - '*.headers["access-token"]'
+      - 'headers["access-token"]'
+      - 'headers.cookie'
       - password
       - secret
 
@@ -29,9 +30,11 @@ paymentGateway:
 
 rabbitmq:
   uri: amqp://127.0.0.1:5672
+  isCustomClient: false
 
 kafka:
   broker: 127.0.0.1:9092
+  isCustomClient: false
 
 postgres:
   auth:

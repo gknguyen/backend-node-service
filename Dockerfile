@@ -8,7 +8,7 @@ WORKDIR /home/src/app
 
 COPY . .
 
-RUN npm ci --ignore-scripts
+RUN npm ci
 RUN npm run build
 RUN npm prune --production
 

@@ -3,11 +3,11 @@ import * as fs from 'fs';
 import { join } from 'path';
 import ENV from './env';
 import { INestApplication } from '@nestjs/common';
-import { ACCESS_TOKEN, SERVICE_VERSION } from './const';
+import { ACCESS_TOKEN, SERVICE_NAME, SERVICE_VERSION } from './const';
 import { getServerHostName } from './utils';
 
 export function getSwaggerDocument(app: INestApplication) {
-  const name = ENV.SERVICE.NAME || 'Service';
+  const name = ENV.SERVICE.NAME || SERVICE_NAME || 'Service';
   const description = ENV.SERVICE.DESCRIPTION || 'API specification for the service';
 
   const config = new DocumentBuilder()

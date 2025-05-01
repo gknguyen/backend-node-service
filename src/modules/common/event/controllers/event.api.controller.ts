@@ -1,18 +1,17 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ClientKafka, ClientRMQ } from '@nestjs/microservices';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { EventTypeEnum, KafkaTopicEnum, RabbitPatternEnum } from '../shared/event.const';
+import { EventTypeEnum, KAFKA_SERVICE_TOKEN, RABBITMQ_SERVICE_TOKEN } from '../shared/event.const';
 import { EmitMessageDto } from '../shared/event.dto';
-import { KAFKA_TOKEN, RABBITMQ_TOKEN } from '../shared/event.provider';
+import { IKafkaService, IRabbitMQService } from '../shared/event.interface';
 
 @ApiTags('Event')
 @Controller({ path: 'api/event' })
 export class EventApiController {
   constructor(
     private readonly eventEmitter: EventEmitter2,
-    @Inject(RABBITMQ_TOKEN) private readonly rabbitmqClient: ClientRMQ,
-    @Inject(KAFKA_TOKEN) private readonly kafkaClient: ClientKafka,
+    @Inject(RABBITMQ_SERVICE_TOKEN) private readonly rabbitMQService: IRabbitMQService,
+    @Inject(KAFKA_SERVICE_TOKEN) private readonly kafkaService: IKafkaService,
   ) {}
 
   @Post('emit-message')
@@ -38,8 +37,8 @@ export class EventApiController {
     description: EmitMessageDto.name,
     type: EmitMessageDto,
   })
-  rabbitmqEmitMessage(@Body() body: EmitMessageDto) {
-    this.rabbitmqClient.emit(RabbitPatternEnum.Base, body);
+  async rabbitmqEmitMessage(@Body() body: EmitMessageDto) {
+    await this.rabbitMQService.emitMessage(body);
     return 'message sent.';
   }
 
@@ -52,8 +51,8 @@ export class EventApiController {
     description: EmitMessageDto.name,
     type: EmitMessageDto,
   })
-  kafkaEmitMessage(@Body() body: EmitMessageDto) {
-    this.kafkaClient.emit(KafkaTopicEnum.Base, body);
+  async kafkaEmitMessage(@Body() body: EmitMessageDto) {
+    await this.kafkaService.emitMessage(body);
     return 'message sent.';
   }
 }

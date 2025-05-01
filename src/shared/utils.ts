@@ -6,3 +6,13 @@ export function getServerHostName(port = ENV.SERVICE.PORT) {
     return `${ENV.SERVICE.PROTOCOL}://${ENV.SERVICE.HOST}:${port}`;
   return `${ENV.SERVICE.PROTOCOL}://${ENV.SERVICE.HOST}`;
 }
+
+export async function sleep(ms: number): Promise<void> {
+  if (ms)
+    await new Promise<void>((resolve) => {
+      const timeoutId = setTimeout(() => {
+        clearTimeout(timeoutId);
+        resolve();
+      }, ms);
+    });
+}

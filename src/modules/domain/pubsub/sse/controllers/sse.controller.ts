@@ -8,6 +8,7 @@ import {
   KafkaTopicEnum,
   RabbitPatternEnum,
 } from 'src/modules/common/event/shared/event.const';
+import { EventConsumer } from 'src/modules/common/event/shared/event.decorator';
 import { EmitMessageDto } from 'src/modules/common/event/shared/event.dto';
 import { SseService } from '../services/sse.service';
 import { IMessageEvent } from '../shared/interface';
@@ -45,7 +46,7 @@ export class SseController {
     this.sseService.pushDataToChannel(payload.id, payload.data);
   }
 
-  @MessagePattern(KafkaTopicEnum.Base)
+  @EventConsumer(KafkaTopicEnum.Base)
   handleEventFromKafka(payload: EmitMessageDto) {
     this.sseService.pushDataToChannel(payload.id, payload.data);
   }

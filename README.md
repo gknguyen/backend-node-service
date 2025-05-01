@@ -37,7 +37,9 @@
 
 - [NestJS Event](https://docs.nestjs.com/techniques/events)
 - [NestJS RabbitMQ](https://docs.nestjs.com/microservices/rabbitmq)
-- [NestJS Kafka](https://docs.nestjs.com/microservices/kafka)
+- Kafka
+  - [NestJS Kafka](https://docs.nestjs.com/microservices/kafka) (Default)
+  - [confluent-kafka-javascript](https://github.com/confluentinc/confluent-kafka-javascript)
 
 ### ORM/ODM
 
@@ -58,7 +60,7 @@ npm ci
 ## Start dependency containers
 
 ```bash
-docker-compose up -d postgres mongo kafka rabbitmq
+docker-compose up -d postgres mongo kafka-ui rabbitmq
 ```
 
 ### Setup mongo in cluster mode
