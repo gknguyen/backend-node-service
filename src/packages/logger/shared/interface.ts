@@ -24,3 +24,9 @@ export interface IBaseLoggerOptions {
   prettyEnabled?: boolean;
   redact?: IBaseLoggerRedactOptions;
 }
+
+export interface IKafkaLogContext {
+  topic?: string;
+  partition?: number;
+  offset?: string | number;
+}

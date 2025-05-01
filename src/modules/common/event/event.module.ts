@@ -1,30 +1,41 @@
-import { Global, Inject, Module, OnModuleInit } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ClientKafka, ClientRMQ, ClientsModule } from '@nestjs/microservices';
-import { logger } from 'src/shared/logger';
+import { ClientsModule } from '@nestjs/microservices';
+import { EventSdkModule } from 'src/packages/event-sdk';
+import { getKafkaCustomOptions } from 'src/shared/config/kafka.config';
+import ENV from 'src/shared/env';
 import { EventApiController } from './controllers/event.api.controller';
-import { eventProviders, KAFKA_TOKEN, RABBITMQ_TOKEN } from './shared/event.provider';
+import { BuiltinKafkaService } from './services/builtin-kafka.service';
+import { BuiltinRabbitMQService } from './services/builtin-rabbitmq.service';
+import { CustomKafkaService } from './services/custom-kafka.service';
+import { KAFKA_SERVICE_TOKEN, RABBITMQ_SERVICE_TOKEN } from './shared/event.const';
+import { eventProviders } from './shared/event.provider';
+
+const imports = [EventEmitterModule.forRoot()]; /** https://docs.nestjs.com/techniques/events */
+
+if (!ENV.KAFKA.IS_CUSTOM_CLIENT || !ENV.RABBITMQ.IS_CUSTOM_CLIENT) {
+  imports.push(
+    ClientsModule.registerAsync(eventProviders),
+  ); /** https://docs.nestjs.com/microservices/basics */
+}
+
+if (ENV.KAFKA.IS_CUSTOM_CLIENT) {
+  imports.push(EventSdkModule.forKafkajs(getKafkaCustomOptions()));
+}
 
 @Global()
 @Module({
-  imports: [
-    EventEmitterModule.forRoot() /** https://docs.nestjs.com/techniques/events */,
-    ClientsModule.registerAsync(eventProviders) /** https://docs.nestjs.com/microservices/basics */,
-  ],
+  imports,
   controllers: [EventApiController],
+  providers: [
+    {
+      provide: RABBITMQ_SERVICE_TOKEN,
+      useClass: BuiltinRabbitMQService,
+    },
+    {
+      provide: KAFKA_SERVICE_TOKEN,
+      useClass: ENV.KAFKA.IS_CUSTOM_CLIENT ? CustomKafkaService : BuiltinKafkaService,
+    },
+  ],
 })
-export class EventModule implements OnModuleInit {
-  constructor(
-    @Inject(RABBITMQ_TOKEN) private readonly rabbitmqClient: ClientRMQ,
-    @Inject(KAFKA_TOKEN) private readonly kafkaClient: ClientKafka,
-  ) {}
-
-  onModuleInit() {
-    this.rabbitmqClient.connect().then(() => {
-      logger.info('Connected to RabbitMQ');
-    });
-    this.kafkaClient.connect().then(() => {
-      logger.info('Connected to Kafka');
-    });
-  }
-}
+export class EventModule {}

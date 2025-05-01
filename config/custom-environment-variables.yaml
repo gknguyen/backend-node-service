@@ -40,9 +40,15 @@ paymentGateway:
 
 rabbitmq:
   uri: RABBITMQ_URI
+  isCustomClient:
+    __name: RABBITMQ_IS_CUSTOM_CLIENT
+    __format: json
 
 kafka:
   broker: KAFKA_BROKER
+  isCustomClient:
+    __name: KAFKA_IS_CUSTOM_CLIENT
+    __format: json
 
 postgres:
   auth:

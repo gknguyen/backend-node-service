@@ -69,7 +69,7 @@
     "mongo-migrate-ts": "^1.6.2",
     "mongoose": "^8.12.1",
     "pg": "^8.13.3",
-    "pino": "^9.4.0",
+    "pino": "^9.6.0",
     "pino-pretty": "^11.2.2",
     "reflect-metadata": "^0.1.14",
     "response-time": "^2.3.3",

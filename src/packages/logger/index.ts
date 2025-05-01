@@ -1,8 +1,8 @@
-import { LOGGER_TYPE_MAPPER, LoggerType } from './shared/const';
-import { IBaseLogger, IBaseLoggerOptions, ILogInput } from './shared/interface';
 import { Request, Response } from 'express';
-import { formatResBodyString, getUserId } from './shared/utils';
 import * as format from 'string-template';
+import { LOGGER_TYPE_MAPPER, LoggerType } from './shared/const';
+import { IBaseLogger, IBaseLoggerOptions, IKafkaLogContext, ILogInput } from './shared/interface';
+import { formatResBodyString, getUserId } from './shared/utils';
 
 export class Logger implements IBaseLogger {
   logger: IBaseLogger;
@@ -77,5 +77,61 @@ export class Logger implements IBaseLogger {
       rawResponseEnd.apply(res, restArgs);
       return res;
     };
+  }
+
+  httpRequestLog(req: Request) {
+    const payload = {
+      userId: getUserId(),
+      timestamp: new Date().toISOString(),
+      headers: req.headers,
+      body: req.body,
+      clientIP: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+      userAgent: req.headers['user-agent'],
+      originalUri: req.originalUrl,
+      uri: req.url,
+      method: req.method,
+    };
+    this.debug(`HTTP Incoming Request`, payload);
+  }
+
+  httpResponseLog(res: Response) {
+    const rawResponse = res.write;
+    const rawResponseEnd = res.end;
+    const chunks: Buffer[] = [];
+
+    res.write = (...args: any[]) => {
+      const restArgs: any = [];
+      for (let i = 0; i < args.length; i++) restArgs[i] = args[i];
+      chunks.push(Buffer.from(restArgs[0]));
+      rawResponse.apply(res, restArgs);
+      return true;
+    };
+
+    res.end = (...args: any[]) => {
+      const restArgs: any = [];
+      for (let i = 0; i < args.length; i++) restArgs[i] = args[i];
+      if (restArgs[0]) chunks.push(Buffer.from(restArgs[0]));
+      const body = Buffer.concat(chunks).toString('utf8');
+      const payload = {
+        userId: getUserId(),
+        timestamp: new Date().toISOString(),
+        headers: res.getHeaders(),
+        body: formatResBodyString(body),
+        statusCode: res.statusCode,
+      };
+      const message = `HTTP Outgoing Response [${res.statusCode}]`;
+      if (res.statusCode >= 200 && res.statusCode < 400) this.debug(message, payload);
+      else this.error(message, payload);
+      rawResponseEnd.apply(res, restArgs);
+      return res;
+    };
+  }
+
+  kafkaRequestLog(context: IKafkaLogContext) {
+    this.debug(`Kafka Incoming Request`, context);
+  }
+
+  kafkaResponseLog(context: IKafkaLogContext) {
+    this.debug(`Kafka Outgoing Response`, context);
   }
 }

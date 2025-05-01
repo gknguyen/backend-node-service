@@ -1,5 +1,5 @@
 import * as httpContext from 'express-http-context';
-import { isPlainObject } from 'lodash';
+import { isNil, isPlainObject } from 'lodash';
 import { ILogInput } from './interface';
 
 export function getUserId(): string | undefined {
@@ -13,7 +13,7 @@ export function serializedError(error: ILogInput) {
     const obj: ILogInput = {};
     for (const key of Object.getOwnPropertyNames(error)) {
       const value = (error as any)[key];
-      if (value) {
+      if (!isNil(value)) {
         if (errorKeys.includes(key)) obj.reason = serializedError(value);
         else obj[key] = serializedError(value);
       }
@@ -24,7 +24,7 @@ export function serializedError(error: ILogInput) {
   if (isPlainObject(error)) {
     const obj: ILogInput = {};
     for (const key of Object.keys(error)) {
-      if (error[key]) {
+      if (!isNil(error[key])) {
         if (errorKeys.includes(key)) obj.reason = serializedError(error[key]);
         else obj[key] = serializedError(error[key]);
       }
