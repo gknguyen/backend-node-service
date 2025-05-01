@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies if cache missed
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        run: npm ci --ignore-scripts
+        run: npm ci
 
       - name: Run lint
         if: ${{ always() }}

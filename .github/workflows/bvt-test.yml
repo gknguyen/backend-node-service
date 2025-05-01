@@ -44,7 +44,7 @@ jobs:
 
       - name: Install dependencies if cache missed
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        run: npm ci --ignore-scripts
+        run: npm ci
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
