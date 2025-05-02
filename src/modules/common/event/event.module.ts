@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ClientsModule } from '@nestjs/microservices';
 import { EventSdkModule } from 'src/packages/event-sdk';
-import { getKafkaCustomOptions } from 'src/shared/config/kafka.config';
+import { getKafkaCustomOptionsV2 } from 'src/shared/config/kafka.config';
 import ENV from 'src/shared/env';
 import { EventApiController } from './controllers/event.api.controller';
 import { BuiltinKafkaService } from './services/builtin-kafka.service';
@@ -20,7 +20,8 @@ if (!ENV.KAFKA.IS_CUSTOM_CLIENT || !ENV.RABBITMQ.IS_CUSTOM_CLIENT) {
 }
 
 if (ENV.KAFKA.IS_CUSTOM_CLIENT) {
-  imports.push(EventSdkModule.forKafkajs(getKafkaCustomOptions()));
+  // imports.push(EventSdkModule.forKafkajs(getKafkaCustomOptionsV1()));
+  imports.push(EventSdkModule.forRdKafka(getKafkaCustomOptionsV2()));
 }
 
 @Global()

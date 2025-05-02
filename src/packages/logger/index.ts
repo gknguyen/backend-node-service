@@ -72,7 +72,7 @@ export class Logger implements IBaseLogger {
         },
       };
       if (res.statusCode >= 200 && res.statusCode < 400)
-        this.debug(`HTTP Success Log [${res.statusCode}]`, payload);
+        this.info(`HTTP Success Log [${res.statusCode}]`, payload);
       else this.error(`HTTP Error Log [${res.statusCode}]`, payload);
       rawResponseEnd.apply(res, restArgs);
       return res;
@@ -91,7 +91,7 @@ export class Logger implements IBaseLogger {
       uri: req.url,
       method: req.method,
     };
-    this.debug(`HTTP Incoming Request`, payload);
+    this.info(`HTTP Incoming Request`, payload);
   }
 
   httpResponseLog(res: Response) {
@@ -120,7 +120,7 @@ export class Logger implements IBaseLogger {
         statusCode: res.statusCode,
       };
       const message = `HTTP Outgoing Response [${res.statusCode}]`;
-      if (res.statusCode >= 200 && res.statusCode < 400) this.debug(message, payload);
+      if (res.statusCode >= 200 && res.statusCode < 400) this.info(message, payload);
       else this.error(message, payload);
       rawResponseEnd.apply(res, restArgs);
       return res;
@@ -128,10 +128,10 @@ export class Logger implements IBaseLogger {
   }
 
   kafkaRequestLog(context: IKafkaLogContext) {
-    this.debug(`Kafka Incoming Request`, context);
+    this.info(`Kafka Incoming Request`, context);
   }
 
   kafkaResponseLog(context: IKafkaLogContext) {
-    this.debug(`Kafka Outgoing Response`, context);
+    this.info(`Kafka Outgoing Response`, context);
   }
 }

@@ -1,7 +1,7 @@
 import { KafkaJS } from '@confluentinc/kafka-javascript';
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { EVENT_SDK_OPTIONS } from '../event-sdk.const';
-import { IEventSdkProducer } from '../event-sdk.type';
+import { EVENT_SDK_OPTIONS } from '../shared/shared.const';
+import { IEventSdkProducer } from '../shared/shared.type';
 import { EVENT_SDK_KAFKAJS_TOKEN } from './kafkajs.provider';
 import { IEventSdkEmitEvent, IEventSdkOptions } from './kafkajs.type';
 
@@ -14,7 +14,16 @@ export class KafkaJSProducer implements IEventSdkProducer, OnModuleInit, OnModul
     @Inject(EVENT_SDK_KAFKAJS_TOKEN) private readonly eventSdk: KafkaJS.Kafka,
   ) {
     this.producer = this.eventSdk.producer(
-      this.options.producer ? { kafkaJS: this.options.producer } : undefined,
+      this.options.producer
+        ? {
+            kafkaJS: {
+              ...this.options.producer,
+              ...(this.options.client.logger && {
+                logger: this.options.client.logger.namespace(KafkaJSProducer.name),
+              }),
+            },
+          }
+        : undefined,
     );
   }
 

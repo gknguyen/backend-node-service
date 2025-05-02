@@ -3,7 +3,7 @@ import { KafkaContext } from '@nestjs/microservices';
 import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { IKafkaJS } from 'src/packages/event-sdk';
+import { EVENT_SDK_CONTEXT_TYPE, IKafkaJS } from 'src/packages/event-sdk';
 import { logger } from 'src/shared/logger';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const contextType = context.getType<string>();
     if (contextType === 'http') {
       return this.httpLog(context, next);
-    } else if (contextType === 'kafka') {
+    } else if (contextType === EVENT_SDK_CONTEXT_TYPE) {
       return this.kafkaLog(context, next);
     } else if (contextType === 'rpc') {
       return this.rpcLog(context, next);
