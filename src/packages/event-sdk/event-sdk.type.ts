@@ -1,11 +1,3 @@
 export * as IKafkaJS from './kafkajs/kafkajs.type';
-
-export interface IEventSdkEmitEvent<T> {
-  topic: string;
-  key: string;
-  data: T;
-}
-
-export interface IEventSdkProducer {
-  emit<T>(payload: IEventSdkEmitEvent<T>): Promise<any>;
-}
+export * as IRdKafka from './rdkafka/rdkafka.type';
+export * as IKafka from './shared/shared.type';

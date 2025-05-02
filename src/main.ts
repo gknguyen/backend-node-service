@@ -9,5 +9,5 @@ bootstrap()
     logger.info(`Docs available on ${getServerHostName()}${ENV.SERVICE.DOCS_URL}/`);
   })
   .catch((err) => {
-    logger.error(`Failed to start the service: ${err}`);
+    logger.error(`Failed to start the service`, err);
   });

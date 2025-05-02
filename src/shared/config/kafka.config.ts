@@ -1,9 +1,10 @@
 import { KafkaJS } from '@confluentinc/kafka-javascript';
 import { KafkaOptions, Transport } from '@nestjs/microservices';
 import { CompressionTypes } from 'kafkajs';
-import { IKafkaJS } from 'src/packages/event-sdk';
+import { IKafkaJS, IRdKafka } from 'src/packages/event-sdk';
 import { SERVICE_NAME } from '../const';
 import ENV from '../env';
+import { eventSdkLogger } from '../logger';
 
 export function getKafkaOptions() {
   return {
@@ -36,7 +37,7 @@ export function getKafkaConfig(): KafkaOptions {
   };
 }
 
-export function getKafkaCustomOptions(): IKafkaJS.IEventSdkOptions {
+export function getKafkaCustomOptionsV1(): IKafkaJS.IEventSdkOptions {
   const baseConfig = getKafkaOptions();
 
   return {
@@ -44,6 +45,7 @@ export function getKafkaCustomOptions(): IKafkaJS.IEventSdkOptions {
     client: {
       ...baseConfig.client,
       logLevel: KafkaJS.logLevel.INFO,
+      logger: eventSdkLogger,
     },
     producer: {
       ...baseConfig.send,
@@ -55,5 +57,34 @@ export function getKafkaCustomOptions(): IKafkaJS.IEventSdkOptions {
       partitionAssigners: [KafkaJS.PartitionAssigners.cooperativeSticky],
       logLevel: KafkaJS.logLevel.INFO,
     },
+  };
+}
+
+export function getKafkaCustomOptionsV2(): IRdKafka.IEventSdkOptions {
+  return {
+    client: {
+      'client.id': SERVICE_NAME,
+      'metadata.broker.list': ENV.KAFKA.BROKER,
+      'api.version.request.timeout.ms': 30_000,
+      'socket.connection.setup.timeout.ms': 10_000,
+      'allow.auto.create.topics': true,
+    },
+    producer: {
+      'compression.codec': 'gzip',
+      log_level: KafkaJS.logLevel.DEBUG,
+    },
+    producerTopic: {
+      'message.timeout.ms': 30_000,
+    },
+    consumer: {
+      'group.id': SERVICE_NAME,
+      'partition.assignment.strategy': KafkaJS.PartitionAssigners.cooperativeSticky,
+      log_level: KafkaJS.logLevel.DEBUG,
+      debug: 'consumer',
+    },
+    consumerTopic: {
+      'auto.offset.reset': 'latest',
+    },
+    logger: eventSdkLogger,
   };
 }
