@@ -102,7 +102,7 @@ jobs:
             --health-interval 10s \
             --health-timeout 5s \
             --health-retries 10 \
-            bitnami/kafka
+            bitnami/kafka:2-debian-10
 
           docker run -d --name postgres --network backend-network -p 5432:5432 \
             -e POSTGRES_USER=postgres \

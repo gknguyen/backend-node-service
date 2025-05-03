@@ -5,6 +5,8 @@ import { configureMiddlewares } from 'src/shared/bootstrap';
 import { configureSwagger } from 'src/shared/swagger';
 import { mockStripeClient } from './mock';
 
+jest.setTimeout(30_000);
+
 beforeAll(async () => {
   const module = await Test.createTestingModule({
     imports: [AppModule],
