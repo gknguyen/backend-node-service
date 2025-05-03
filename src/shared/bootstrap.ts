@@ -4,7 +4,7 @@ import { json, urlencoded } from 'express';
 import * as httpContext from 'express-http-context';
 import helmet from 'helmet';
 import * as responseTime from 'response-time';
-import { HttpExceptionFilter } from 'src/exception/http-exception.filter';
+import { CustomExceptionFilter } from 'src/exception/exception.filter';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 import { AppModule } from 'src/modules/app.module';
 import { getKafkaConfig } from './config/kafka.config';
@@ -19,7 +19,7 @@ export function configureMiddlewares(app: INestApplication) {
   app.use(httpContext.middleware);
   app.use(responseTime({ header: 'x-response-time' }));
   app.useGlobalInterceptors(new LoggingInterceptor());
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new CustomExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

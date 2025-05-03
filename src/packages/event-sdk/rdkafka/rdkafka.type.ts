@@ -1,5 +1,5 @@
 import { RdKafka } from '@confluentinc/kafka-javascript';
-import { IEmitEvent, Logger } from '../shared/shared.type';
+import { IContext, IEmitEvent, Logger } from '../shared/shared.type';
 
 export interface IEventSdkOptions {
   client: RdKafka.GlobalConfig;
@@ -20,10 +20,7 @@ export interface IEventSdkEmitEvent<T> extends IEmitEvent<T> {
   headers?: RdKafka.MessageHeader[];
 }
 
-export interface IEventSdkContext {
-  topic: string;
-  partition: number;
+export interface IEventSdkContext extends IContext {
   key: RdKafka.MessageKey;
-  offset: string | number;
   headers?: RdKafka.MessageHeader[];
 }

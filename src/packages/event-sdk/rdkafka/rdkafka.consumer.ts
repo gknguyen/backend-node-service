@@ -3,7 +3,7 @@ import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 import { ExternalContextCreator, MetadataScanner, ModulesContainer } from '@nestjs/core';
 import { EVENT_SDK_OPTIONS } from '../shared/shared.const';
 import { parseStringToJson } from '../shared/shared.utils';
-import { Logger } from '../shared/shared.type';
+import { IContext, Logger } from '../shared/shared.type';
 import { IEventSdkContext, IEventSdkOptions } from './rdkafka.type';
 import { SharedConsumer } from '../shared/shared.consumer';
 
@@ -69,7 +69,7 @@ export class RdKafkaConsumer extends SharedConsumer implements OnModuleInit, OnM
     }
   }
 
-  private handleMessage({ topic, partition, value, offset, headers, key }: RdKafka.Message) {
+  private async handleMessage({ topic, partition, value, offset, headers, key }: RdKafka.Message) {
     const callbackList = this.subscriberMap.get(topic) || {};
     for (const callbackKey in callbackList) {
       const { instance, methodKey } = callbackList[callbackKey];
@@ -85,8 +85,28 @@ export class RdKafkaConsumer extends SharedConsumer implements OnModuleInit, OnM
 
         const handler = this.getHandler(methodKey, instance);
 
-        handler(payload, context);
+        await this.handleRetryWithBackoff(
+          context,
+          async () => {
+            await handler(payload, context);
+          },
+          {
+            retries:
+              this.options.producer?.['message.send.max.retries'] ||
+              this.options.producer?.retries ||
+              5,
+            backoffInterval: this.options.client['retry.backoff.ms'] || 3000,
+            timeout: this.options.client['reconnect.backoff.max.ms'] || 30_000,
+            logger: this.logger,
+          },
+        );
       }
+    }
+  }
+
+  protected async commitOffset({ topic, partition, offset }: IContext) {
+    if (this.consumer) {
+      this.consumer.commitMessage({ topic, partition, offset: offset as number });
     }
   }
 }

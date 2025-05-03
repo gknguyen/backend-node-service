@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { AUTH_ERRORS } from 'src/exception/const';
+import { AUTH_ERRORS } from 'src/exception/exception.const';
 import { getObjectId } from 'src/modules/common/database/mongo/shared/mongo.utils';
 import { UserInfoRepository } from 'src/modules/common/database/postgres/account/repositories/user-info.repository';
 import { AuthUserRepository } from 'src/modules/common/database/postgres/auth/repositories/auth-user.repository';

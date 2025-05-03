@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalContextCreator, MetadataScanner, ModulesContainer } from '@nestjs/core';
 import { EVENT_SDK_CONSUMER_METADATA, EVENT_SDK_CONTEXT_TYPE } from './shared.const';
+import { IContext, IRetryWithBackoffOptions } from './shared.type';
+import { sleep } from 'src/shared/utils';
 
 @Injectable()
-export class SharedConsumer {
+export abstract class SharedConsumer {
   protected readonly subscriberMap = new Map<
     string,
     {
@@ -62,4 +64,39 @@ export class SharedConsumer {
       EVENT_SDK_CONTEXT_TYPE,
     );
   }
+
+  protected async handleRetryWithBackoff(
+    { topic, partition, offset }: IContext,
+    handler: (...args: any[]) => Promise<any>,
+    { retries, backoffInterval, timeout, logger }: IRetryWithBackoffOptions,
+  ) {
+    let attempts = 0;
+    const startTime = Date.now();
+
+    while (attempts <= retries) {
+      const elapsed = Date.now() - startTime;
+      if (elapsed > timeout) {
+        logger.error(`Retry timeout (${timeout}ms) exceeded, committing offset and skipping.`);
+        await this.commitOffset({ topic, partition, offset });
+        break;
+      }
+
+      try {
+        await handler();
+        break;
+      } catch (err) {
+        attempts++;
+        if (attempts > retries) {
+          logger.error('Max retries reached, committing offset and skipping');
+          await this.commitOffset({ topic, partition, offset });
+          break;
+        } else {
+          logger.warn(`Error when processing message, retried with attempt ${attempts}:`);
+          await sleep(backoffInterval);
+        }
+      }
+    }
+  }
+
+  protected abstract commitOffset({ topic, partition, offset }: IContext): Promise<void>;
 }

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { omit } from 'lodash';
-import { AUTH_ERRORS } from 'src/exception/const';
+import { AUTH_ERRORS } from 'src/exception/exception.const';
 import { UserInfoRepository } from 'src/modules/common/database/postgres/account/repositories/user-info.repository';
 import { AuthUserRepository } from 'src/modules/common/database/postgres/auth/repositories/auth-user.repository';
 import { EventTypeEnum } from 'src/modules/common/event/shared/event.const';

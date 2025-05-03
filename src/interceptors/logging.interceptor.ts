@@ -31,7 +31,7 @@ export class LoggingInterceptor implements NestInterceptor {
           logger.httpResponseLog(httpResponse);
         },
         error: (err: Error): void => {
-          logger.error('error', err);
+          logger.error('http error', err);
         },
       }),
     );
@@ -55,7 +55,7 @@ export class LoggingInterceptor implements NestInterceptor {
           });
         },
         error: (err: Error): void => {
-          logger.error('error', err);
+          logger.kafkaResponseErrorLog(err);
         },
       }),
     );
@@ -81,7 +81,8 @@ export class LoggingInterceptor implements NestInterceptor {
             });
         },
         error: (err: Error): void => {
-          logger.error('error', err);
+          if (rpcContext instanceof KafkaContext) logger.kafkaResponseErrorLog(err);
+          else logger.error('rpc error', err);
         },
       }),
     );

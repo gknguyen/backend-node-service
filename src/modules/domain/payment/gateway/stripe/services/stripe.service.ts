@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { ERRORS } from 'src/exception/const';
+import { ERRORS } from 'src/exception/exception.const';
 import ENV from 'src/shared/env';
 import Stripe from 'stripe';
 import { MOCK_CARD_TOKEN_MAPPING } from '../shared/stripe.const';
