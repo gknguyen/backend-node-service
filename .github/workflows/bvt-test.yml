@@ -139,6 +139,7 @@ jobs:
             -e SERVICE_PORT=4200 \
             -e RABBITMQ_URI=amqp://rabbitmq:5672 \
             -e KAFKA_BROKER=kafka:29092 \
+            -e KAFKA_IS_CUSTOM_CLIENT=true \
             -e POSTGRES_AUTH_HOST=postgres \
             -e POSTGRES_ACCOUNT_HOST=postgres \
             -e MONGODB_AUTH_HOST=mongo \
