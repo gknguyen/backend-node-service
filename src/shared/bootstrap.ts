@@ -7,6 +7,7 @@ import * as responseTime from 'response-time';
 import { CustomExceptionFilter } from 'src/exception/exception.filter';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 import { AppModule } from 'src/modules/app.module';
+import { EventSdkGuard } from 'src/packages/event-sdk';
 import { getKafkaConfig } from './config/kafka.config';
 import { getRabbitMQConfig } from './config/rabbitmq.config';
 import ENV from './env';
@@ -20,6 +21,7 @@ export function configureMiddlewares(app: INestApplication) {
   app.use(responseTime({ header: 'x-response-time' }));
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalFilters(new CustomExceptionFilter());
+  app.useGlobalGuards(new EventSdkGuard());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

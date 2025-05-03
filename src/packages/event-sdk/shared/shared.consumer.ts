@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalContextCreator, MetadataScanner, ModulesContainer } from '@nestjs/core';
+import { sleep } from 'src/shared/utils';
 import { EVENT_SDK_CONSUMER_METADATA, EVENT_SDK_CONTEXT_TYPE } from './shared.const';
 import { IContext, IRetryWithBackoffOptions } from './shared.type';
-import { sleep } from 'src/shared/utils';
 
 @Injectable()
 export abstract class SharedConsumer {
@@ -91,7 +91,7 @@ export abstract class SharedConsumer {
           await this.commitOffset({ topic, partition, offset });
           break;
         } else {
-          logger.warn(`Error when processing message, retried with attempt ${attempts}:`);
+          logger.warn(`Error when processing message, retried with attempt ${attempts}`, err);
           await sleep(backoffInterval);
         }
       }
