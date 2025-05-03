@@ -1,5 +1,5 @@
 import { KafkaJS } from '@confluentinc/kafka-javascript';
-import { IEmitEvent } from '../shared/shared.type';
+import { IContext, IEmitEvent } from '../shared/shared.type';
 
 export interface IEventSdkOptions {
   client: KafkaJS.KafkaConfig;
@@ -12,11 +12,8 @@ export interface IEventSdkEmitEvent<T> extends IEmitEvent<T> {
   headers?: KafkaJS.IHeaders;
 }
 
-export interface IEventSdkContext {
-  topic: string;
-  partition: number;
+export interface IEventSdkContext extends IContext {
   key?: string | number | null;
-  offset: string | number;
   headers?: KafkaJS.IHeaders;
   heartbeat: () => Promise<void>;
 }

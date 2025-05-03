@@ -134,4 +134,8 @@ export class Logger implements IBaseLogger {
   kafkaResponseLog(context: IKafkaLogContext) {
     this.info(`Kafka Outgoing Response`, context);
   }
+
+  kafkaResponseErrorLog(err: Error) {
+    this.error(`Kafka Outgoing Response`, err);
+  }
 }

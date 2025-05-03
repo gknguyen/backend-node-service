@@ -1,7 +1,6 @@
-import { KafkaJS } from '@confluentinc/kafka-javascript';
 import { KafkaOptions, Transport } from '@nestjs/microservices';
 import { CompressionTypes } from 'kafkajs';
-import { IKafkaJS, IRdKafka } from 'src/packages/event-sdk';
+import { IKafkaJS, IRdKafka, EventSdk } from 'src/packages/event-sdk';
 import { SERVICE_NAME } from '../const';
 import ENV from '../env';
 import { eventSdkLogger } from '../logger';
@@ -44,18 +43,23 @@ export function getKafkaCustomOptionsV1(): IKafkaJS.IEventSdkOptions {
     ...baseConfig,
     client: {
       ...baseConfig.client,
-      logLevel: KafkaJS.logLevel.INFO,
+      logLevel: EventSdk.LogLevel.INFO,
       logger: eventSdkLogger,
+      retry: {
+        initialRetryTime: 300,
+        maxRetryTime: 30_000,
+        retries: 5,
+      },
     },
     producer: {
       ...baseConfig.send,
-      compression: KafkaJS.CompressionTypes.GZIP,
-      logLevel: KafkaJS.logLevel.INFO,
+      compression: EventSdk.CompressionTypes.GZIP,
+      logLevel: EventSdk.LogLevel.INFO,
     },
     consumer: {
       ...baseConfig.consumer,
-      partitionAssigners: [KafkaJS.PartitionAssigners.cooperativeSticky],
-      logLevel: KafkaJS.logLevel.INFO,
+      partitionAssigners: [EventSdk.PartitionAssigners.cooperativeSticky],
+      logLevel: EventSdk.LogLevel.INFO,
     },
   };
 }
@@ -65,21 +69,25 @@ export function getKafkaCustomOptionsV2(): IRdKafka.IEventSdkOptions {
     client: {
       'client.id': SERVICE_NAME,
       'metadata.broker.list': ENV.KAFKA.BROKER,
-      'api.version.request.timeout.ms': 30_000,
+      'socket.timeout.ms': 30_000,
       'socket.connection.setup.timeout.ms': 10_000,
       'allow.auto.create.topics': true,
+      'retry.backoff.ms': 300,
+      'reconnect.backoff.max.ms': 30_000,
     },
     producer: {
-      'compression.codec': 'gzip',
-      log_level: KafkaJS.logLevel.DEBUG,
+      'compression.codec': EventSdk.CompressionTypes.GZIP,
+      log_level: EventSdk.LogLevel.DEBUG,
+      'message.send.max.retries': 5,
     },
     producerTopic: {
       'message.timeout.ms': 30_000,
+      'delivery.timeout.ms': 30_000,
     },
     consumer: {
       'group.id': SERVICE_NAME,
-      'partition.assignment.strategy': KafkaJS.PartitionAssigners.cooperativeSticky,
-      log_level: KafkaJS.logLevel.DEBUG,
+      'partition.assignment.strategy': EventSdk.PartitionAssigners.cooperativeSticky,
+      log_level: EventSdk.LogLevel.DEBUG,
       debug: 'consumer',
     },
     consumerTopic: {

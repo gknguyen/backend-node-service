@@ -102,7 +102,7 @@ jobs:
             --health-interval 10s \
             --health-timeout 5s \
             --health-retries 10 \
-            bitnami/kafka
+            bitnami/kafka:2-debian-10
 
           docker run -d --name postgres --network backend-network -p 5432:5432 \
             -e POSTGRES_USER=postgres \
@@ -123,8 +123,6 @@ jobs:
             mongo \
             mongod --replSet mongo-set
 
-          sleep 10
-
       - name: Containers additional setup
         run: |
           docker ps -a
@@ -141,13 +139,14 @@ jobs:
             -e SERVICE_PORT=4200 \
             -e RABBITMQ_URI=amqp://rabbitmq:5672 \
             -e KAFKA_BROKER=kafka:29092 \
+            -e KAFKA_IS_CUSTOM_CLIENT=true \
             -e POSTGRES_AUTH_HOST=postgres \
             -e POSTGRES_ACCOUNT_HOST=postgres \
             -e MONGODB_AUTH_HOST=mongo \
             -e STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }} \
             -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
             ${{ inputs.imageName }}:${{ inputs.tag }}
-          sleep 15
+          sleep 20
           docker logs app
 
       - name: Run tests

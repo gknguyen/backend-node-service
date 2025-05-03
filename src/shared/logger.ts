@@ -1,5 +1,5 @@
 import { KafkaJS } from '@confluentinc/kafka-javascript';
-import { IKafka } from 'src/packages/event-sdk';
+import { EventSdk, IKafka } from 'src/packages/event-sdk';
 import { Logger } from 'src/packages/logger';
 import { LoggerType } from 'src/packages/logger/shared/const';
 import ENV from './env';
@@ -19,7 +19,7 @@ class EventSdkLogger implements IKafka.Logger {
   private currentLogLevel: KafkaJS.logLevel;
   private ns: string;
 
-  constructor(namespace = 'root', level = KafkaJS.logLevel.INFO) {
+  constructor(namespace = 'root', level = EventSdk.LogLevel.INFO) {
     this.ns = namespace;
     this.currentLogLevel = level;
   }
@@ -39,19 +39,19 @@ class EventSdkLogger implements IKafka.Logger {
   }
 
   info(message: string, extra?: object) {
-    this.log('info', KafkaJS.logLevel.INFO, message, extra);
+    this.log('info', EventSdk.LogLevel.INFO, message, extra);
   }
 
   error(message: string, extra?: object) {
-    this.log('error', KafkaJS.logLevel.ERROR, message, extra);
+    this.log('error', EventSdk.LogLevel.ERROR, message, extra);
   }
 
   warn(message: string, extra?: object) {
-    this.log('warn', KafkaJS.logLevel.WARN, message, extra);
+    this.log('warn', EventSdk.LogLevel.WARN, message, extra);
   }
 
   debug(message: string, extra?: object) {
-    this.log('debug', KafkaJS.logLevel.DEBUG, message, extra);
+    this.log('debug', EventSdk.LogLevel.DEBUG, message, extra);
   }
 
   namespace(namespace: string, logLevel?: KafkaJS.logLevel): IKafka.Logger {
