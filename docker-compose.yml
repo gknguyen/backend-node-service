@@ -10,15 +10,16 @@ services:
     environment:
       - NODE_ENV=production
       - SERVICE_PORT=4200
+      - RABBITMQ_URI=amqp://rabbitmq:5672
       - KAFKA_BROKER=kafka:29092
-      - DATABASE_AUTH_HOST=postgres
-      - DATABASE_AUTH_DATABASE=postgres
-      - DATABASE_ACCOUNT_HOST=postgres
-      - DATABASE_ACCOUNT_DATABASE=postgres
+      - KAFKA_IS_CUSTOM_CLIENT=true
+      - POSTGRES_AUTH_HOST=postgres
+      - POSTGRES_AUTH_DATABASE=postgres
+      - POSTGRES_ACCOUNT_HOST=postgres
+      - POSTGRES_ACCOUNT_DATABASE=postgres
+      - MONGODB_AUTH_HOST=mongo
     env_file:
       - .env
-    volumes:
-      - backend-node-service:/home/src/app
     networks:
       - backend-network
     ports:
@@ -124,9 +125,6 @@ networks:
     driver: bridge
 
 volumes:
-  backend-node-service:
-    name: backend-node-service
-    driver: local
   rabbitmq-data:
     name: rabbitmq-data
     driver: local
