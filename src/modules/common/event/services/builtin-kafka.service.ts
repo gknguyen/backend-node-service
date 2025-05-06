@@ -25,6 +25,12 @@ export class BuiltinKafkaService implements IKafkaService, OnModuleInit, OnModul
   }
 
   emitMessage(payload: EmitMessageDto) {
-    return firstValueFrom(this.kafkaClient.emit(KafkaTopicEnum.Base, instanceToPlain(payload)));
+    const data = instanceToPlain(payload);
+    return firstValueFrom(
+      this.kafkaClient.emit(KafkaTopicEnum.Base, {
+        key: data.id,
+        value: data,
+      }),
+    );
   }
 }

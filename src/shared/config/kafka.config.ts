@@ -17,14 +17,16 @@ export function getKafkaOptions() {
     consumer: {
       groupId: SERVICE_NAME,
       allowAutoTopicCreation: true,
-      fromBeginning: false,
     },
     send: {
       timeout: 30_000,
       compression: CompressionTypes.GZIP,
     },
     run: {
-      partitionsConsumedConcurrently: 1,
+      partitionsConsumedConcurrently: 3,
+    },
+    subscribe: {
+      fromBeginning: false,
     },
   };
 }
@@ -58,6 +60,7 @@ export function getKafkaCustomOptionsV1(): IKafkaJS.IEventSdkOptions {
     },
     consumer: {
       ...baseConfig.consumer,
+      ...baseConfig.subscribe,
       partitionAssigners: [EventSdk.PartitionAssigners.cooperativeSticky],
       logLevel: EventSdk.LogLevel.INFO,
     },

@@ -73,16 +73,14 @@ services:
     depends_on:
       - zookeeper
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
+  kafka-admin:
+    image: 'docker.redpanda.com/redpandadata/console:latest'
+    container_name: kafka-admin
     restart: unless-stopped
     ports:
       - 8082:8080
     environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_BROKERS=kafka:29092
     networks:
       - backend-network
     depends_on:
