@@ -24,6 +24,18 @@ jobs:
 
     if: github.event_name == 'pull_request'
 
+    services:
+      rabbitmq:
+        image: rabbitmq:latest
+        options: >-
+          --name postgres
+          --health-cmd "rabbitmq-diagnostics check_port_connectivity"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+        ports:
+          - 5672:5672
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -77,20 +89,22 @@ jobs:
 
       - name: Load container dependencies
         run: |
-          docker network create --driver bridge backend-network
+          # docker network create --driver bridge backend-network
+            CONTAINER_NETWORK=$(docker network ls --format '{{.Name}}' | grep github)
+            echo "CONTAINER_NETWORK=$CONTAINER_NETWORK" >> $GITHUB_ENV
 
-          docker run -d --name rabbitmq --network backend-network -p 5672:5672 \
-            --health-cmd "rabbitmq-diagnostics check_port_connectivity" \
-            --health-interval 10s \
-            --health-timeout 5s \
-            --health-retries 3 \
-            rabbitmq
+          # docker run -d --name rabbitmq --network $CONTAINER_NETWORK -p 5672:5672 \
+          #   --health-cmd "rabbitmq-diagnostics check_port_connectivity" \
+          #   --health-interval 10s \
+          #   --health-timeout 5s \
+          #   --health-retries 3 \
+          #   rabbitmq
 
-          docker run -d --name zookeeper --network backend-network -p 2181:2181 \
+          docker run -d --name zookeeper --network $CONTAINER_NETWORK -p 2181:2181 \
             -e ALLOW_ANONYMOUS_LOGIN=yes \
             bitnami/zookeeper
 
-          docker run -d --name kafka --network backend-network -p 9092:9092 \
+          docker run -d --name kafka --network $CONTAINER_NETWORK -p 9092:9092 \
             -e ALLOW_PLAINTEXT_LISTENER=yes \
             -e KAFKA_BROKER_ID=1 \
             -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT \
@@ -104,7 +118,7 @@ jobs:
             --health-retries 10 \
             bitnami/kafka:2-debian-10
 
-          docker run -d --name postgres --network backend-network -p 5432:5432 \
+          docker run -d --name postgres --network $CONTAINER_NETWORK -p 5432:5432 \
             -e POSTGRES_USER=postgres \
             -e POSTGRES_PASSWORD=postgres \
             -e POSTGRES_DB=postgres \
@@ -114,7 +128,7 @@ jobs:
             --health-retries 5 \
             postgres
 
-          docker run -d --name mongo --network backend-network -p 27017:27017 \
+          docker run -d --name mongo --network $CONTAINER_NETWORK -p 27017:27017 \
             -e MASTER=mongo \
             --health-cmd "mongosh --eval 'db.runCommand(\"ping\").ok' --quiet | grep 1" \
             --health-interval 10s \
@@ -134,7 +148,7 @@ jobs:
         run: |
           docker load --input /tmp/${{ inputs.imageName }}-${{ inputs.tag }}.tar
           docker image ls -a
-          docker run -d --name app --network backend-network -p 4200:4200 \
+          docker run -d --name app --network $CONTAINER_NETWORK -p 4200:4200 \
             -e NODE_ENV=production \
             -e SERVICE_PORT=4200 \
             -e RABBITMQ_URI=amqp://rabbitmq:5672 \
@@ -146,7 +160,7 @@ jobs:
             -e STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }} \
             -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
             ${{ inputs.imageName }}:${{ inputs.tag }}
-          sleep 80
+          sleep 20
           docker logs app
 
       - name: Run tests
