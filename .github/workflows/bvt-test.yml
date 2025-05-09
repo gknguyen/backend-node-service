@@ -47,21 +47,20 @@ jobs:
         image: bitnami/kafka:2-debian-10
         env:
           ALLOW_PLAINTEXT_LISTENER: 'yes'
-          KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'
+          KAFKA_BROKER_ID: 1
           KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT
-          KAFKA_CFG_LISTENERS: INTERNAL://:29092,LOCAL://:9092
+          KAFKA_CFG_LISTENERS: INTERNAL://kafka:29092,LOCAL://kafka:9092
           KAFKA_CFG_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,LOCAL://localhost:9092
           KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
           KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
         options: >-
           --name kafka
-          --health-cmd "kafka-topics.sh --bootstrap-server localhost:29092 --list || exit 1"
+          --health-cmd "kafka-topics.sh --bootstrap-server kafka:9092 --list || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
         ports:
           - 9092:9092
-          - 29092:29092
       postgres:
         image: postgres:latest
         env:
