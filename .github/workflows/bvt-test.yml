@@ -44,7 +44,7 @@ jobs:
         ports:
           - 2181:2181
       kafka:
-        image: bitnami/kafka:2-debian-10
+        image: bitnami/kafka:3.9.0
         env:
           ALLOW_PLAINTEXT_LISTENER: 'yes'
           KAFKA_BROKER_ID: 1

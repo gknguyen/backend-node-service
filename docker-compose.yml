@@ -54,7 +54,7 @@ services:
       - 2181:2181
 
   kafka:
-    image: bitnami/kafka
+    image: bitnami/kafka:3.9.0
     container_name: kafka
     restart: on-failure
     environment:
