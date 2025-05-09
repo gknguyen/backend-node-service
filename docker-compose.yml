@@ -10,15 +10,16 @@ services:
     environment:
       - NODE_ENV=production
       - SERVICE_PORT=4200
+      - RABBITMQ_URI=amqp://rabbitmq:5672
       - KAFKA_BROKER=kafka:29092
-      - DATABASE_AUTH_HOST=postgres
-      - DATABASE_AUTH_DATABASE=postgres
-      - DATABASE_ACCOUNT_HOST=postgres
-      - DATABASE_ACCOUNT_DATABASE=postgres
+      - KAFKA_IS_CUSTOM_CLIENT=true
+      - POSTGRES_AUTH_HOST=postgres
+      - POSTGRES_AUTH_DATABASE=postgres
+      - POSTGRES_ACCOUNT_HOST=postgres
+      - POSTGRES_ACCOUNT_DATABASE=postgres
+      - MONGODB_AUTH_HOST=mongo
     env_file:
       - .env
-    volumes:
-      - backend-node-service:/home/src/app
     networks:
       - backend-network
     ports:
@@ -53,7 +54,7 @@ services:
       - 2181:2181
 
   kafka:
-    image: bitnami/kafka
+    image: bitnami/kafka:3.9.0
     container_name: kafka
     restart: on-failure
     environment:
@@ -73,16 +74,14 @@ services:
     depends_on:
       - zookeeper
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
+  kafka-admin:
+    image: 'docker.redpanda.com/redpandadata/console:latest'
+    container_name: kafka-admin
     restart: unless-stopped
     ports:
       - 8082:8080
     environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_BROKERS=kafka:29092
     networks:
       - backend-network
     depends_on:
@@ -126,9 +125,6 @@ networks:
     driver: bridge
 
 volumes:
-  backend-node-service:
-    name: backend-node-service
-    driver: local
   rabbitmq-data:
     name: rabbitmq-data
     driver: local

@@ -1,14 +1,14 @@
 export enum EventTypeEnum {
-  Base = 'event.emmitted',
+  Base = 'event.emitted',
   UserCreated = 'event.user.created',
 }
 
 export enum RabbitPatternEnum {
-  Base = 'rabbitmq.emmitted',
+  Base = 'rabbitmq.emitted',
 }
 
 export enum KafkaTopicEnum {
-  Base = 'kafka.emmitted',
+  Base = 'kafka.emitted',
 }
 
 export const KAFKA_SERVICE_TOKEN = 'KAFKA_SERVICE_TOKEN';

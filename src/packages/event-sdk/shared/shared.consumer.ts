@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalContextCreator, MetadataScanner, ModulesContainer } from '@nestjs/core';
 import { sleep } from 'src/shared/utils';
-import { EVENT_SDK_CONSUMER_METADATA, EVENT_SDK_CONTEXT_TYPE } from './shared.const';
+import {
+  EVENT_SDK_CONSUMER_METADATA,
+  EVENT_SDK_CONTEXT_TYPE,
+  RETRIABLE_ERROR_CODES,
+} from './shared.const';
 import { IContext, IRetryWithBackoffOptions } from './shared.type';
 
 @Injectable()
@@ -86,12 +90,19 @@ export abstract class SharedConsumer {
         break;
       } catch (err) {
         attempts++;
-        if (attempts > retries) {
+        if (!err.code || (err.code && !RETRIABLE_ERROR_CODES.includes(err.code))) {
+          logger.error('Non-retriable error, committing offset and skipping', err);
+          await this.commitOffset({ topic, partition, offset });
+          break;
+        } else if (attempts > retries) {
           logger.error('Max retries reached, committing offset and skipping');
           await this.commitOffset({ topic, partition, offset });
           break;
         } else {
-          logger.warn(`Error when processing message, retried with attempt ${attempts}`, err);
+          logger.warn(
+            `Something wrong when processing message, retried with attempt ${attempts}`,
+            err,
+          );
           await sleep(backoffInterval);
         }
       }

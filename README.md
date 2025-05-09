@@ -60,7 +60,7 @@ npm ci
 ## Start dependency containers
 
 ```bash
-docker-compose up -d postgres mongo kafka-ui rabbitmq
+docker-compose up -d postgres mongo kafka-admin rabbitmq
 ```
 
 ### Setup mongo in cluster mode
