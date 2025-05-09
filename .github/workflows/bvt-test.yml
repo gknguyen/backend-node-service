@@ -55,7 +55,7 @@ jobs:
           KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
         options: >-
           --name kafka
-          --health-cmd "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"
+          --health-cmd "kafka-topics.sh --bootstrap-server kafka:9092 --list || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
