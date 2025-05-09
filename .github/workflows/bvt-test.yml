@@ -84,7 +84,7 @@ jobs:
             --health-interval 10s \
             --health-timeout 5s \
             --health-retries 3 \
-            rabbitmq:management
+            rabbitmq
 
           docker run -d --name zookeeper --network backend-network -p 2181:2181 \
             -e ALLOW_ANONYMOUS_LOGIN=yes \
@@ -146,7 +146,7 @@ jobs:
             -e STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }} \
             -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
             ${{ inputs.imageName }}:${{ inputs.tag }}
-          sleep 40
+          sleep 80
           docker logs app
 
       - name: Run tests
