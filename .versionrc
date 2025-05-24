@@ -1,0 +1,35 @@
+{
+  "compareUrlFormat": "https://github.com/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
+  "commitUrlFormat": "https://github.com/{{owner}}/{{repository}}/commit/{{hash}}",
+  "releaseCommitMessageFormat": "bump version {{currentTag}}",
+  "skip": {
+    "commit": true,
+    "tag": true
+  },
+  "types": [
+    {
+      "type": "feat",
+      "section": "Features"
+    },
+    {
+      "type": "feature",
+      "section": "Features"
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes"
+    },
+    {
+      "type": "chore",
+      "section": "Chores"
+    },
+    {
+      "type": "refactor",
+      "section": "Chores"
+    },
+    {
+      "type": "docs",
+      "hidden": true
+    }
+  ]
+}
