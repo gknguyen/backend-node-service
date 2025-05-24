@@ -109,6 +109,7 @@
     "jest": "29.5.0",
     "jest-html-reporters": "^3.1.7",
     "jest-junit": "^16.0.0",
+    "lint-staged": "^16.0.0",
     "mongodb-memory-server": "^10.1.4",
     "prettier": "^2.8.8",
     "rimraf": "^6.0.1",
@@ -120,40 +121,5 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.6.2"
-  },
-  "standard-version": {
-    "compareUrlFormat": "https://github.com/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
-    "commitUrlFormat": "https://github.com/{{owner}}/{{repository}}/commit/{{hash}}",
-    "releaseCommitMessageFormat": "bump version {{currentTag}}",
-    "skip": {
-      "commit": true,
-      "tag": true
-    },
-    "types": [
-      {
-        "type": "feat",
-        "section": "Features"
-      },
-      {
-        "type": "feature",
-        "section": "Features"
-      },
-      {
-        "type": "fix",
-        "section": "Bug Fixes"
-      },
-      {
-        "type": "chore",
-        "section": "Chores"
-      },
-      {
-        "type": "refactor",
-        "section": "Chores"
-      },
-      {
-        "type": "docs",
-        "hidden": true
-      }
-    ]
   }
 }
