@@ -4,8 +4,8 @@ import { UserService } from '../services/user.service';
 import { AuthUserDto, RegisterAuthUserRequestDto } from '../shared/user.dto';
 
 @ApiTags('Auth Account')
-@Controller({ path: 'auth/users' })
-export class UserController {
+@Controller({ path: 'api/auth/users' })
+export class UserApiController {
   constructor(private readonly userService: UserService) {}
 
   @Post()

@@ -51,4 +51,9 @@ export class UserSessionRepository {
       },
     );
   }
+
+  async checkExistedByUserId(userId: string): Promise<boolean> {
+    const result = await this.dataModel.exists({ userId, isDeleted: false });
+    return !!result;
+  }
 }

@@ -28,4 +28,16 @@ export const AUTH_ERRORS = {
     message: 'password incorrect.',
     statusCode: HttpStatus.UNAUTHORIZED,
   },
+  ACCESS_TOKEN_NOT_FOUND: {
+    message: 'access token not found.',
+    statusCode: HttpStatus.UNAUTHORIZED,
+  },
+  INVALID_ACCESS_TOKEN: {
+    message: 'Invalid access token.',
+    statusCode: HttpStatus.UNAUTHORIZED,
+  },
+  ACCESS_TOKEN_EXPIRED: {
+    message: 'Access token expired.',
+    statusCode: HttpStatus.UNAUTHORIZED,
+  },
 };

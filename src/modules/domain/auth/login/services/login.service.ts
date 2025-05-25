@@ -31,7 +31,7 @@ export class LoginService {
 
     const sessionId = getObjectId();
     const accessToken = getAccessToken({
-      id: sessionId,
+      id: sessionId.toString(),
       userId: userInfo.userId,
       email: userInfo.email,
     });

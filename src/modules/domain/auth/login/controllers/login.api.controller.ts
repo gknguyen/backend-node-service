@@ -4,8 +4,8 @@ import { LoginResponseDto, LoginWithPasswordRequestDto } from '../shared/login.d
 import { LoginService } from '../services/login.service';
 
 @ApiTags('Auth Login')
-@Controller({ path: 'auth/login' })
-export class LoginController {
+@Controller({ path: 'api/auth/login' })
+export class LoginApiController {
   constructor(private readonly loginService: LoginService) {}
 
   @Post('with-password')
