@@ -7,36 +7,34 @@ import { IEventSdkEmitEvent, IEventSdkOptions } from './kafkajs.type';
 
 @Injectable()
 export class KafkaJSProducer implements IEventSdkProducer, OnModuleInit, OnModuleDestroy {
-  private readonly producer: KafkaJS.Producer;
+  private readonly producer?: KafkaJS.Producer;
 
   constructor(
     @Inject(EVENT_SDK_OPTIONS) private readonly options: IEventSdkOptions,
     @Inject(EVENT_SDK_KAFKAJS_TOKEN) private readonly eventSdk: KafkaJS.Kafka,
   ) {
-    this.producer = this.eventSdk.producer(
-      this.options.producer
-        ? {
-            kafkaJS: {
-              ...this.options.producer,
-              ...(this.options.client.logger && {
-                logger: this.options.client.logger.namespace(KafkaJSProducer.name),
-              }),
-            },
-          }
-        : undefined,
-    );
+    if (this.options.producer) {
+      this.producer = this.eventSdk.producer({
+        kafkaJS: {
+          ...this.options.producer,
+          ...(this.options.client.logger && {
+            logger: this.options.client.logger.namespace(KafkaJSProducer.name),
+          }),
+        },
+      });
+    }
   }
 
   async onModuleInit() {
-    await this.producer.connect();
+    await this.producer?.connect();
   }
 
   async onModuleDestroy() {
-    await this.producer.disconnect();
+    await this.producer?.disconnect();
   }
 
   async emit<T>(payload: IEventSdkEmitEvent<T>) {
-    return this.producer.send({
+    return this.producer?.send({
       topic: payload.topic,
       messages: [
         {

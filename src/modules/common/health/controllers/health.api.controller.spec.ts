@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HealthApiController } from './health.api.controller';
-import { HealthService } from '../services/health.service';
+import { HealthService } from '../services/app-health.service';
 import { TerminusModule } from '@nestjs/terminus';
 
 describe('HealthApiController', () => {

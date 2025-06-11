@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { HealthService } from './services/health.service';
-import { HealthApiController } from './controllers/health.api.controller';
 import { TerminusModule } from '@nestjs/terminus';
+import { HealthApiController } from './controllers/health.api.controller';
+import { AppHealthService } from './services/app-health.service';
+import { KafkaHealthService } from './services/kafka-health.service';
 
 @Module({
   imports: [TerminusModule],
   controllers: [HealthApiController],
-  providers: [HealthService],
+  providers: [AppHealthService, KafkaHealthService],
 })
 export class HealthModule {}

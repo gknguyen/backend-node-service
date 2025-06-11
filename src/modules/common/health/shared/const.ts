@@ -1,3 +1,4 @@
 export enum HealthKey {
-  Service = 'service',
+  App = 'app',
+  Kafka = 'kafka',
 }

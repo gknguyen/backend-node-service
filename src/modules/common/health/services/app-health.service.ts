@@ -3,12 +3,12 @@ import { HealthIndicator } from '@nestjs/terminus';
 import { HealthKey } from '../shared/const';
 
 @Injectable()
-export class HealthService extends HealthIndicator {
+export class AppHealthService extends HealthIndicator {
   constructor() {
     super();
   }
 
   getHello() {
-    return this.getStatus(HealthKey.Service, true, { checked: `I'm alive!` });
+    return this.getStatus(HealthKey.App, true, { checked: `Up and running` });
   }
 }

@@ -1,8 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
-import { HealthService } from '../services/health.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 import { pick } from 'lodash';
+import { AppHealthService } from '../services/app-health.service';
+import { KafkaHealthService } from '../services/kafka-health.service';
 
 @ApiTags('Health')
 @Controller({ path: 'api/health-check' })
@@ -10,7 +11,8 @@ import { pick } from 'lodash';
 export class HealthApiController {
   constructor(
     private readonly health: HealthCheckService,
-    private readonly healthService: HealthService,
+    private readonly app: AppHealthService,
+    private readonly kafka: KafkaHealthService,
   ) {}
 
   @Get()
@@ -20,7 +22,7 @@ export class HealthApiController {
   })
   @HealthCheck()
   async healthCheck() {
-    const result = await this.health.check([() => this.healthService.getHello()]);
+    const result = await this.health.check([() => this.app.getHello(), () => this.kafka.check()]);
     return pick(result, 'status', 'details');
   }
 }

@@ -23,7 +23,7 @@ export function getKafkaOptions() {
       compression: CompressionTypes.GZIP,
     },
     run: {
-      partitionsConsumedConcurrently: 3,
+      partitionsConsumedConcurrently: 2,
     },
     subscribe: {
       fromBeginning: false,
@@ -63,6 +63,12 @@ export function getKafkaCustomOptionsV1(): IKafkaJS.IEventSdkOptions {
       ...baseConfig.subscribe,
       partitionAssigners: [EventSdk.PartitionAssigners.cooperativeSticky],
       logLevel: EventSdk.LogLevel.INFO,
+    },
+    admin: {
+      logLevel: EventSdk.LogLevel.INFO,
+      misc: {
+        allowAutoTopicCreation: true,
+      },
     },
   };
 }
