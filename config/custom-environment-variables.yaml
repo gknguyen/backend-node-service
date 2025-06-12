@@ -49,6 +49,9 @@ kafka:
   isCustomClient:
     __name: KAFKA_IS_CUSTOM_CLIENT
     __format: json
+  allowAutoTopicCreation:
+    __name: ALLOW_AUTO_TOPIC_CREATION
+    __format: json
 
 postgres:
   auth:

@@ -10,6 +10,11 @@ export async function initKafkaInstance(): Promise<void> {
   /** use image "confluentinc/cp-kafka" */
   const kafkaContainer = await new KafkaContainer()
     .withName('kafka')
+    .withEnvironment({
+      KAFKA_BROKER_ID: '1',
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1',
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true',
+    })
     .withExposedPorts(9092)
     .start();
 

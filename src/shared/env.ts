@@ -37,6 +37,7 @@ const ENV = {
   KAFKA: {
     BROKER: config.get<string>('kafka.broker'),
     IS_CUSTOM_CLIENT: config.get<boolean>('kafka.isCustomClient'),
+    ALLOW_AUTO_TOPIC_CREATION: config.get<boolean>('kafka.allowAutoTopicCreation'),
   },
   POSTGRES: {
     AUTH: {
