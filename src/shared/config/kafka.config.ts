@@ -64,12 +64,6 @@ export function getKafkaCustomOptionsV1(): IKafkaJS.IEventSdkOptions {
       partitionAssigners: [EventSdk.PartitionAssigners.cooperativeSticky],
       logLevel: EventSdk.LogLevel.INFO,
     },
-    admin: {
-      logLevel: EventSdk.LogLevel.INFO,
-      misc: {
-        allowAutoTopicCreation: true,
-      },
-    },
   };
 }
 
