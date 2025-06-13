@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HealthIndicator } from '@nestjs/terminus';
-import { HealthKey } from '../shared/const';
+import { HealthKey } from '../shared/health.const';
 
 @Injectable()
 export class AppHealthService extends HealthIndicator {

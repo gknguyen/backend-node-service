@@ -1,9 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 import { pick } from 'lodash';
 import { AppHealthService } from '../services/app-health.service';
-import { KafkaHealthService } from '../services/kafka-health.service';
+import { KAFKA_HEALTH_SERVICE_TOKEN } from '../shared/health.const';
+import { IKafkaHealthService } from '../shared/health.interface';
 
 @ApiTags('Health')
 @Controller({ path: 'api/health-check' })
@@ -12,7 +13,7 @@ export class HealthApiController {
   constructor(
     private readonly health: HealthCheckService,
     private readonly app: AppHealthService,
-    private readonly kafka: KafkaHealthService,
+    @Inject(KAFKA_HEALTH_SERVICE_TOKEN) private readonly kafka: IKafkaHealthService,
   ) {}
 
   @Get()
