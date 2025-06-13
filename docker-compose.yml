@@ -42,31 +42,37 @@ services:
       - 15672:15672 # GUI
 
   zookeeper:
-    image: bitnami/zookeeper
+    image: confluentinc/cp-zookeeper
     container_name: zookeeper
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ZOOKEEPER_SYNC_LIMIT=2
     volumes:
-      - zookeeper-data:/bitnami/zookeeper
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-log:/var/lib/zookeeper/log
+      - zookeeper-secrets:/etc/zookeeper/secrets
     networks:
       - backend-network
     ports:
       - 2181:2181
 
   kafka:
-    image: bitnami/kafka:3.9.0
+    image: confluentinc/cp-kafka
     container_name: kafka
     restart: on-failure
     environment:
-      - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_BROKER_ID=1
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=INTERNAL://kafka:29092,LOCAL://kafka:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:29092,LOCAL://localhost:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://kafka:29092,LOCAL://kafka:9092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka:29092,LOCAL://localhost:9092
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
     volumes:
-      - kafka-data:/bitnami/kafka
+      - kafka-data:/var/lib/kafka/data
+      - kafka-secrets:/etc/kafka/secrets
     networks:
       - backend-network
     ports:
@@ -131,8 +137,17 @@ volumes:
   zookeeper-data:
     name: zookeeper-data
     driver: local
+  zookeeper-log:
+    name: zookeeper-log
+    driver: local
+  zookeeper-secrets:
+    name: zookeeper-secrets
+    driver: local
   kafka-data:
     name: kafka-data
+    driver: local
+  kafka-secrets:
+    name: kafka-secrets
     driver: local
   postgres-data:
     name: postgres-data
