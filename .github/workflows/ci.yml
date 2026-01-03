@@ -49,7 +49,7 @@ jobs:
     if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
-    needs: [lint, dependencies-scan]
+    needs: [lint]
     with:
       runner: ${{ inputs.runner }}
 
@@ -58,7 +58,7 @@ jobs:
     if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
     uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
-    needs: [lint, dependencies-scan]
+    needs: [lint]
     with:
       runner: ${{ inputs.runner }}
 
@@ -67,7 +67,7 @@ jobs:
     if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
     uses: ./.github/workflows/bvt-test.yml
     secrets: inherit
-    needs: [lint, dependencies-scan]
+    needs: [lint]
     with:
       runner: ${{ inputs.runner }}
 
