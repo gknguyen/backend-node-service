@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="0" errors="0" time="6.245">
+  <testsuite name="test/e2e/modules/health.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T06:51:56" time="6.138" tests="1">
+    <testcase classname="HealthModule (e2e) › [GET] /api/health-check" name="should_call_successfully" time="0.019">
+    </testcase>
+  </testsuite>
+</testsuites>
