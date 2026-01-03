@@ -18,9 +18,9 @@ jobs:
     secrets: inherit
     needs: [ci]
 
-  publish-github-page:
-    name: Publish GitHub Page
+  publish-reports:
+    name: Publish Reports
     if: ${{ always() }}
-    uses: ./.github/actions/publish-github-page.yml
+    uses: ./.github/workflows/publish.yml
     secrets: inherit
     needs: [ci]
