@@ -1,0 +1,26 @@
+name: Push Workflows
+
+on:
+  push:
+    branches:
+      - master
+      - release/**
+
+jobs:
+  ci:
+    name: Continue Integration
+    uses: ./.github/workflows/actions/ci.yml
+    secrets: inherit
+
+  cd:
+    name: Continue Deployment
+    uses: ./.github/workflows/actions/cd.yml
+    secrets: inherit
+    needs: [ci]
+
+  publish-github-page:
+    name: Publish GitHub Page
+    if: ${{ always() }}
+    uses: ./.github/workflows/shared/publish-github-page.yml
+    secrets: inherit
+    needs: [ci]

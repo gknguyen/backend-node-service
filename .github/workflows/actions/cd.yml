@@ -1,0 +1,16 @@
+name: Continue Deployment
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: 'Runner'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+
+jobs:
+  release-tag:
+    name: Release Tag
+    uses: ./.github/workflows/shared/release-tag.yml
+    secrets: inherit

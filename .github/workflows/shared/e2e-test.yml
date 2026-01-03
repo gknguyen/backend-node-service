@@ -33,6 +33,8 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-npm-
+            ${{ runner.os }}-
 
       - name: Install dependencies if cache missed
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
@@ -70,7 +72,7 @@ jobs:
 
       - name: Attach coverage report to PR
         uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ always() }}
+        if: ${{ always() && github.event_name == 'pull_request' }}
         with:
           header: coverage-e2e-report
           message: ${{ steps.coverage-e2e.outputs.report }}
@@ -84,3 +86,12 @@ jobs:
           conclusion: ${{ steps.coverage-e2e.outcome }}
           output: |
             {"summary": ${{ toJSON(steps.coverage-e2e.outputs.report) }}}
+
+      - name: Archive Test Reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-e2e-test
+          path: report-e2e-test
+          retention-days: 1
+          include-hidden-files: false

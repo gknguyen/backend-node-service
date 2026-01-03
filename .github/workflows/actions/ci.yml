@@ -1,0 +1,61 @@
+name: Continue Integration
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: 'Runner'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+
+jobs:
+  check-version:
+    name: Check Version
+    uses: ./.github/workflows/shared/check-version.yml
+    secrets: inherit
+
+  prepare:
+    name: Prepare
+    uses: ./.github/workflows/shared/prepare.yml
+    secrets: inherit
+
+  lint:
+    name: Lint
+    uses: ./.github/workflows/shared/lint.yml
+    secrets: inherit
+    needs: [prepare]
+
+  dependencies-scan:
+    name: Dependencies Scan
+    uses: ./.github/workflows/shared/dependencies-scan.yml
+    secrets: inherit
+    needs: [prepare]
+
+  unit-test:
+    name: Unit Test
+    uses: ./.github/workflows/shared/unit-test.yml
+    secrets: inherit
+    needs: [prepare]
+
+  e2e-test:
+    name: E2E Test
+    uses: ./.github/workflows/shared/e2e-test.yml
+    secrets: inherit
+    needs: [prepare]
+
+  bvt-test:
+    name: BVT Test
+    uses: ./.github/workflows/shared/bvt-test.yml
+    secrets: inherit
+    needs: [prepare]
+
+  build-docker-image:
+    name: Build Docker Image
+    uses: ./.github/workflows/shared/build-docker-image.yml
+    needs: [unit-test, e2e-test]
+
+  docker-image-scan:
+    name: Docker Image Scan
+    uses: ./.github/workflows/shared/docker-image-scan.yml
+    needs: [build-docker-image]

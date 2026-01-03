@@ -1,0 +1,191 @@
+name: Publish Artifacts to Github Page
+
+on:
+  workflow_call:
+    inputs:
+      RUNNER:
+        description: 'Runner'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+
+env:
+  UNIT_TEST_REPORT_FOLDER: unit-test
+  E2E_TEST_REPORT_FOLDER: e2e-test
+  BUILD_REPORT_FOLDER: build
+  VULNERABILITY_REPORT_FOLDER: vulnerability
+
+jobs:
+  publish-github-page:
+    name: Publish Artifacts
+    runs-on: ['${{ inputs.RUNNER }}']
+    permissions:
+      contents: write
+      pages: write
+
+    steps:
+      # Unit Test Reports
+      - name: Download Unit Test Reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: report-unit-test
+          path: /tmp/${{ env.UNIT_TEST_REPORT_FOLDER }}/
+
+      - name: Check if Unit Test Reports exists
+        id: check_unit_reports
+        run: |
+          if [ -d "/tmp/${{ env.UNIT_TEST_REPORT_FOLDER }}" ]; then
+            echo "Folder found."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Folder not found."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish Unit Test Reports to GitHub Pages
+        if: ${{ steps.check_unit_reports.outputs.exists == 'true' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/${{ env.UNIT_TEST_REPORT_FOLDER }}
+          destination_dir: ${{ env.UNIT_TEST_REPORT_FOLDER }}
+          user_name: 'GitHub Action'
+          user_email: 'action@github.com'
+          commit_message: 'feat: update Unit test reports'
+
+      # E2E Test Reports
+      - name: Download E2E Test Reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: report-e2e-test
+          path: /tmp/${{ env.E2E_TEST_REPORT_FOLDER }}/
+
+      - name: Check if E2E Test Reports exists
+        id: check_e2e_reports
+        run: |
+          if [ -d "/tmp/${{ env.E2E_TEST_REPORT_FOLDER }}" ]; then
+            echo "Folder found."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Folder not found."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish E2E Test Reports to GitHub Pages
+        if: ${{ steps.check_e2e_reports.outputs.exists == 'true' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/${{ env.E2E_TEST_REPORT_FOLDER }}
+          destination_dir: ${{ env.E2E_TEST_REPORT_FOLDER }}
+          user_name: 'GitHub Action'
+          user_email: 'action@github.com'
+          commit_message: 'feat: update E2E test reports'
+
+      # Build Reports
+      - name: Download Build Reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: report-build-*
+          path: /tmp/${{ env.BUILD_REPORT_FOLDER }}/
+
+      - name: Check if Build Reports exists
+        id: check_build_reports
+        run: |
+          if [ -d "/tmp/${{ env.BUILD_REPORT_FOLDER }}" ]; then
+            echo "Folder found."
+            echo "exists=true" >> $GITHUB_OUTPUT
+            for dir in /tmp/${{ env.BUILD_REPORT_FOLDER }}/report-build-*; do
+              if [ -d "$dir" ]; then
+                newdir="/tmp/${{ env.BUILD_REPORT_FOLDER }}/$(basename "$dir" | sed 's/^report-build-//')"
+                mv "$dir" "$newdir"
+              fi
+            done
+          else
+            echo "Folder not found."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish Build Reports to GitHub Pages
+        if: ${{ steps.check_build_reports.outputs.exists == 'true' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/${{ env.BUILD_REPORT_FOLDER }}
+          destination_dir: ${{ env.BUILD_REPORT_FOLDER }}
+          user_name: 'GitHub Action'
+          user_email: 'action@github.com'
+          commit_message: 'feat: update build reports'
+
+      # Vulnerability Reports
+      - name: Download Security Reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: report-vulnerability-*
+          path: /tmp/${{ env.VULNERABILITY_REPORT_FOLDER }}/
+
+      - name: Check if Vulnerability Reports exists
+        id: check_vulnerability_reports
+        run: |
+          if [ -d "/tmp/${{ env.VULNERABILITY_REPORT_FOLDER }}" ]; then
+            echo "Folder found."
+            echo "exists=true" >> $GITHUB_OUTPUT
+            for dir in /tmp/${{ env.VULNERABILITY_REPORT_FOLDER }}/report-vulnerability-*; do
+              if [ -d "$dir" ]; then
+                newdir="/tmp/${{ env.VULNERABILITY_REPORT_FOLDER }}/$(basename "$dir" | sed 's/^report-vulnerability-//')"
+                mv "$dir" "$newdir"
+              fi
+            done
+          else
+            echo "Folder not found."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish Vulnerability Reports to GitHub Pages
+        if: ${{ steps.check_vulnerability_reports.outputs.exists == 'true' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/${{ env.VULNERABILITY_REPORT_FOLDER }}
+          destination_dir: ${{ env.VULNERABILITY_REPORT_FOLDER }}
+          user_name: 'GitHub Action'
+          user_email: 'action@github.com'
+          commit_message: 'feat: update vulnerability reports'
+
+  update-github-page-homepage:
+    name: Update Homepage
+    runs-on: ['${{ inputs.RUNNER }}']
+    needs: [publish-github-page]
+    permissions:
+      contents: write
+      pages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Generate directory listings
+        uses: gacts/directory-listing@v1
+        with:
+          target: .
+          show-hidden: false
+          overwrite: true
+          ignore: |
+            unit-test/coverage/lcov-report/**
+            e2e-test/coverage/lcov-report/**
+            bvt-test/coverage/lcov-report/**
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          user_name: 'GitHub Action'
+          user_email: 'action@github.com'
+          commit_message: 'feat: update homepage'

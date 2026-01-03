@@ -1,4 +1,4 @@
-name: Docker Image Security Scan
+name: Docker Image Scan
 
 on:
   workflow_call:
@@ -21,7 +21,7 @@ env:
   HIGH_CRITICAL_VULNERABILITIES: false
 
 jobs:
-  docker-image-security-scan:
+  docker-image-scan:
     runs-on: ['${{ inputs.runner }}']
     timeout-minutes: 5
 
@@ -61,9 +61,10 @@ jobs:
       - name: Upload scan report
         uses: actions/upload-artifact@v4
         with:
-          name: trivy-report
+          name: report-vulnerability-image
           path: trivy-report.html
           retention-days: 1
+          include-hidden-files: false
 
       - name: Check for high/critical vulnerabilities
         run: |

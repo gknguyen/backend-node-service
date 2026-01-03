@@ -1,0 +1,21 @@
+name: Pull Request Workflows
+
+on:
+  pull_request:
+    branches:
+      - master
+      - release/**
+
+jobs:
+  ci:
+    name: Continue Integration
+    uses: ./.github/workflows/actions/ci.yml
+    secrets: inherit
+
+  # test
+  publish-github-page:
+    name: Publish GitHub Page
+    if: ${{ always() }}
+    uses: ./.github/workflows/shared/publish-github-page.yml
+    secrets: inherit
+    needs: [ci]
