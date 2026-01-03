@@ -62,20 +62,20 @@ jobs:
     with:
       runner: ${{ inputs.runner }}
 
-  bvt-test:
-    name: BVT Test
-    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
-    uses: ./.github/workflows/bvt-test.yml
-    secrets: inherit
-    needs: [lint]
-    with:
-      runner: ${{ inputs.runner }}
-
   build-docker-image:
     name: Build Docker Image
     if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
     uses: ./.github/workflows/build-docker-image.yml
     needs: [unit-test, e2e-test]
+    with:
+      runner: ${{ inputs.runner }}
+
+  bvt-test:
+    name: BVT Test
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
+    uses: ./.github/workflows/bvt-test.yml
+    secrets: inherit
+    needs: [build-docker-image]
     with:
       runner: ${{ inputs.runner }}
 
