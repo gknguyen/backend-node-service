@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="1" failures="0" errors="0" time="4.447">
-  <testsuite name="test/bvt/modules/health.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T10:25:14" time="4.314" tests="1">
-    <testcase classname="HealthModule (e2e) › [GET] /api/health-check" name="should_call_successfully" time="0.029">
+<testsuites name="jest tests" tests="1" failures="0" errors="0" time="4.139">
+  <testsuite name="test/bvt/modules/health.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T10:25:38" time="4.007" tests="1">
+    <testcase classname="HealthModule (e2e) › [GET] /api/health-check" name="should_call_successfully" time="0.033">
     </testcase>
   </testsuite>
 </testsuites>
