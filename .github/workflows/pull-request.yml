@@ -8,6 +8,6 @@ on:
 
 jobs:
   ci:
-    name: Continue Integration
+    name: CI
     uses: ./.github/workflows/ci.yml
     secrets: inherit
