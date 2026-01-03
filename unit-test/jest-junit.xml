@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="7" failures="0" errors="0" time="9.448">
-  <testsuite name="src/modules/common/database/mongo/shared/mongo.utils.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T06:51:34" time="7.853" tests="5">
-    <testcase classname="mongo.utils" name="should query inside an object when call forOwnRecursive" time="0.007">
+<testsuites name="jest tests" tests="7" failures="0" errors="0" time="9.205">
+  <testsuite name="src/modules/common/database/mongo/shared/mongo.utils.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T09:52:25" time="7.234" tests="5">
+    <testcase classname="mongo.utils" name="should query inside an object when call forOwnRecursive" time="0.019">
     </testcase>
-    <testcase classname="mongo.utils" name="should convert successfully when call convertSetToObject" time="0">
+    <testcase classname="mongo.utils" name="should convert successfully when call convertSetToObject" time="0.001">
     </testcase>
     <testcase classname="mongo.utils" name="should convert successfully when call convertMapToPlainObject" time="0.001">
     </testcase>
-    <testcase classname="mongo.utils" name="should convert successfully when call convertMapToPlainObject" time="0.01">
+    <testcase classname="mongo.utils" name="should convert successfully when call convertMapToPlainObject" time="0.021">
     </testcase>
-    <testcase classname="mongo.utils › getObjectId" name="should return object id" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="src/modules/common/health/controllers/health.api.controller.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T06:51:34" time="8.183" tests="1">
-    <testcase classname="HealthApiController" name="should return service still online&quot;" time="0.006">
+    <testcase classname="mongo.utils › getObjectId" name="should return object id" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="src/middleware/logger.middleware.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T06:51:34" time="9.069" tests="1">
-    <testcase classname="LoggerMiddleware" name="Should call success" time="0.004">
+  <testsuite name="src/modules/common/health/controllers/health.api.controller.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T09:52:25" time="8.075" tests="1">
+    <testcase classname="HealthApiController" name="should return service still online&quot;" time="0.007">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/middleware/logger.middleware.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-03T09:52:25" time="8.849" tests="1">
+    <testcase classname="LoggerMiddleware" name="Should call success" time="0.003">
     </testcase>
   </testsuite>
 </testsuites>
