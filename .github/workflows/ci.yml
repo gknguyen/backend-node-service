@@ -15,6 +15,7 @@ on:
 jobs:
   check-version:
     name: Check Version
+    if: ${{ startsWith(github.head_ref, 'release/') }}
     uses: ./.github/workflows/check-version.yml
     secrets: inherit
     with:

@@ -22,8 +22,6 @@ jobs:
     runs-on: ['${{ inputs.runner }}']
     timeout-minutes: 5
 
-    if: github.event_name == 'pull_request'
-
     services:
       rabbitmq:
         image: rabbitmq:latest

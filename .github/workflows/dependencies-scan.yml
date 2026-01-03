@@ -37,21 +37,19 @@ jobs:
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm ci
 
-      - name: Generate & add audit markdown report to PR
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: oke-py/npm-audit-action@v3
-        with:
-          working_directory: ./
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          audit_level: high
-          create_issues: false
-          create_pr_comments: true
-
-      - name: Generate audit html report
+      - name: Generate audit reports
         if: ${{ always() }}
         run: |
-          npm i -g audit-export
+          npm i -g audit-export @netly/npm-audit-markdown
           npm audit --json | audit-export --title "NPM Audit Report"
+          npm audit --json | npx @netly/npm-audit-markdown --output audit-report.md
+
+      - name: Attach npm-audit report to PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        with:
+          header: dependencies-scan-report
+          path: audit-report.md
 
       - name: Archive audit html report
         if: ${{ always() }}

@@ -14,8 +14,6 @@ jobs:
     runs-on: ['${{ inputs.runner }}']
     timeout-minutes: 5
 
-    if: github.event_name == 'pull_request'
-
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
