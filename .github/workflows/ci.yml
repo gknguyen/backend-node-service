@@ -66,7 +66,7 @@ jobs:
     name: Build Docker Image
     if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
     uses: ./.github/workflows/build-docker-image.yml
-    needs: [unit-test, e2e-test]
+    needs: [unit-test]
     with:
       runner: ${{ inputs.runner }}
 
@@ -89,7 +89,8 @@ jobs:
 
   publish-github-page:
     name: Publish Artifacts to Github Page
-    if: ${{ ((inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always())) && github.event_name != 'pull_request' }}
+    # if: ${{ ((inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always())) && github.event_name != 'pull_request' }}
+    if: ${{ ((inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always())) }}
     uses: ./.github/workflows/publish-github-page.yml
     secrets: inherit
     needs: [docker-image-scan]
