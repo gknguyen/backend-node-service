@@ -93,6 +93,6 @@ jobs:
     if: ${{ ((inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always())) }}
     uses: ./.github/workflows/publish-github-page.yml
     secrets: inherit
-    needs: [docker-image-scan]
+    needs: [bvt-test, docker-image-scan]
     with:
       runner: ${{ inputs.runner }}
