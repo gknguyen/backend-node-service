@@ -9,6 +9,9 @@ on:
         required: false
         default: 'ubuntu-latest'
 
+env:
+  TEST_REPORT_FOLDER: report-unit-test
+
 jobs:
   unit-test:
     runs-on: ['${{ inputs.runner }}']
@@ -47,7 +50,7 @@ jobs:
         if: ${{ always() }}
         with:
           name: Unit test report
-          path: report-unit-test/*.xml
+          path: ${{ env.TEST_REPORT_FOLDER }}/*.xml
           reporter: jest-junit
 
       - name: Generate unit test coverage report
@@ -57,8 +60,8 @@ jobs:
         with:
           skip-step: all
           output: report-markdown
-          coverage-file: coverage/jest-coverage.json
-          base-coverage-file: coverage/jest-coverage.json
+          coverage-file: ${{ env.TEST_REPORT_FOLDER }}/coverage/jest-coverage.json
+          base-coverage-file: ${{ env.TEST_REPORT_FOLDER }}/coverage/jest-coverage.json
           annotations: none
 
       - name: Write coverage report to workflow job summary
@@ -89,6 +92,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: report-unit-test
-          path: report-unit-test
+          path: ${{ env.TEST_REPORT_FOLDER }}
           retention-days: 1
           include-hidden-files: false

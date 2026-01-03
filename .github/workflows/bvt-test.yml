@@ -17,6 +17,9 @@ on:
         required: false
         default: 'latest'
 
+env:
+  TEST_REPORT_FOLDER: report-bvt-test
+
 jobs:
   bvt-test:
     runs-on: ['${{ inputs.runner }}']
@@ -24,7 +27,7 @@ jobs:
 
     services:
       rabbitmq:
-        image: rabbitmq:latest
+        image: rabbitmq:4.0.9
         options: >-
           --name rabbitmq
           --health-cmd "rabbitmq-diagnostics check_port_connectivity"
@@ -50,7 +53,7 @@ jobs:
           ALLOW_PLAINTEXT_LISTENER: 'yes'
           KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'
           KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT
-          KAFKA_LISTENERS: INTERNAL://:29092,LOCAL://:9092
+          KAFKA_LISTENERS: INTERNAL://kafka:29092,LOCAL://kafka:9092
           KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,LOCAL://localhost:9092
           KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
           KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
@@ -157,7 +160,7 @@ jobs:
         if: ${{ always() }}
         with:
           name: BVT test report
-          path: report-bvt-test/*.xml
+          path: ${{ env.TEST_REPORT_FOLDER }}/*.xml
           reporter: jest-junit
 
       - name: Cleanup Docker Builds
@@ -171,6 +174,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: report-bvt-test
-          path: report-bvt-test
+          path: ${{ env.TEST_REPORT_FOLDER }}
           retention-days: 1
           include-hidden-files: false

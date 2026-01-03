@@ -9,6 +9,9 @@ on:
         required: false
         default: 'ubuntu-latest'
 
+env:
+  TEST_REPORT_FOLDER: report-e2e-test
+
 jobs:
   e2e-test:
     runs-on: ['${{ inputs.runner }}']
@@ -47,7 +50,7 @@ jobs:
         if: ${{ always() }}
         with:
           name: E2E test report
-          path: report-e2e-test/*.xml
+          path: ${{ env.TEST_REPORT_FOLDER }}/*.xml
           reporter: jest-junit
 
       - name: Generate e2e test coverage report
@@ -57,8 +60,8 @@ jobs:
         with:
           skip-step: all
           output: report-markdown
-          coverage-file: coverage-e2e/jest-coverage.json
-          base-coverage-file: coverage-e2e/jest-coverage.json
+          coverage-file: ${{ env.TEST_REPORT_FOLDER }}/coverage/jest-coverage.json
+          base-coverage-file: ${{ env.TEST_REPORT_FOLDER }}/coverage/jest-coverage.json
           annotations: none
           custom-title: Coverage report (E2E)
 
@@ -90,6 +93,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: report-e2e-test
-          path: report-e2e-test
+          path: ${{ env.TEST_REPORT_FOLDER }}
           retention-days: 1
           include-hidden-files: false
