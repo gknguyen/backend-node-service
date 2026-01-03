@@ -163,12 +163,6 @@ jobs:
           path: ${{ env.TEST_REPORT_FOLDER }}/*.xml
           reporter: jest-junit
 
-      - name: Cleanup Docker Builds
-        run: |
-          docker stop $(docker ps -q)
-          docker rm $(docker ps -a -q)
-          docker network rm backend-network
-
       - name: Archive Test Reports
         if: ${{ always() }}
         uses: actions/upload-artifact@v4

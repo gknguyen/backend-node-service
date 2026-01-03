@@ -12,6 +12,7 @@ on:
 env:
   UNIT_TEST_REPORT_FOLDER: unit-test
   E2E_TEST_REPORT_FOLDER: e2e-test
+  BVT_TEST_REPORT_FOLDER: bvt-test
   BUILD_REPORT_FOLDER: build
   VULNERABILITY_REPORT_FOLDER: vulnerability
 
@@ -83,6 +84,36 @@ jobs:
           user_name: 'GitHub Action'
           user_email: 'action@github.com'
           commit_message: 'feat: update E2E test reports'
+
+      # BVT Test Reports
+      - name: Download BVT Test Reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: report-bvt-test
+          path: /tmp/${{ env.BVT_TEST_REPORT_FOLDER }}/
+
+      - name: Check if BVT Test Reports exists
+        id: check_bvt_reports
+        run: |
+          if [ -d "/tmp/${{ env.BVT_TEST_REPORT_FOLDER }}" ]; then
+            echo "Folder found."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Folder not found."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish BVT Test Reports to GitHub Pages
+        if: ${{ steps.check_bvt_reports.outputs.exists == 'true' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/${{ env.BVT_TEST_REPORT_FOLDER }}
+          destination_dir: ${{ env.BVT_TEST_REPORT_FOLDER }}
+          user_name: 'GitHub Action'
+          user_email: 'action@github.com'
+          commit_message: 'feat: update BVT test reports'
 
       # Build Reports
       - name: Download Build Reports
