@@ -1,5 +1,7 @@
 # Backend service
 
+- [Github page](https://gknguyen.github.io/backend-node-service/)
+
 ## Technical Approach
 
 ### Core
@@ -13,12 +15,12 @@
 - ENV manager: [config](https://github.com/node-config/node-config) + [dotenv](https://github.com/motdotla/dotenv)
 - Authentication: [jsonwebtoken](https://jwt.io/) + [bcryptjs](https://www.npmjs.com/package/bcryptjs)
 
-### Testing:
+### Testing
 
 - [Jest](https://jestjs.io/)
 - [Supertest](https://github.com/ladjs/supertest)
 
-### Logger:
+### Logger
 
 - [pino](https://getpino.io/#/) (Default)
 - [winston](https://github.com/winstonjs/winston)
@@ -51,7 +53,7 @@
 - [PostgreSQL](https://www.postgresql.org/)
 - [MongoDB](https://www.mongodb.com/)
 
-## Install
+## Installation
 
 ```bash
 npm ci

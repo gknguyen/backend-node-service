@@ -9,12 +9,13 @@ on:
         required: false
         default: 'ubuntu-latest'
 
+env:
+  TEST_REPORT_FOLDER: report-unit-test
+
 jobs:
   unit-test:
     runs-on: ['${{ inputs.runner }}']
     timeout-minutes: 5
-
-    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout the repository
@@ -33,6 +34,8 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-npm-
+            ${{ runner.os }}-
 
       - name: Install dependencies if cache missed
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
@@ -47,7 +50,7 @@ jobs:
         if: ${{ always() }}
         with:
           name: Unit test report
-          path: report-unit-test/*.xml
+          path: ${{ env.TEST_REPORT_FOLDER }}/*.xml
           reporter: jest-junit
 
       - name: Generate unit test coverage report
@@ -57,8 +60,8 @@ jobs:
         with:
           skip-step: all
           output: report-markdown
-          coverage-file: coverage/jest-coverage.json
-          base-coverage-file: coverage/jest-coverage.json
+          coverage-file: ${{ env.TEST_REPORT_FOLDER }}/coverage/jest-coverage.json
+          base-coverage-file: ${{ env.TEST_REPORT_FOLDER }}/coverage/jest-coverage.json
           annotations: none
 
       - name: Write coverage report to workflow job summary
@@ -69,7 +72,7 @@ jobs:
 
       - name: Attach coverage report to PR
         uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ always() }}
+        if: ${{ always() && github.event_name == 'pull_request' }}
         with:
           header: coverage-report
           message: ${{ steps.coverage.outputs.report }}
@@ -83,3 +86,12 @@ jobs:
           conclusion: ${{ steps.coverage.outcome }}
           output: |
             {"summary": ${{ toJSON(steps.coverage.outputs.report) }}}
+
+      - name: Archive Test Reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-unit-test
+          path: ${{ env.TEST_REPORT_FOLDER }}
+          retention-days: 1
+          include-hidden-files: false

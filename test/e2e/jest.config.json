@@ -10,7 +10,7 @@
     "^src/(.*)$": "<rootDir>/src/$1",
     "^test/(.*)$": "<rootDir>/test/$1"
   },
-  "coverageDirectory": "<rootDir>/coverage-e2e",
+  "coverageDirectory": "<rootDir>/report-e2e-test/coverage",
   "collectCoverageFrom": [
     "<rootDir>/src/**/*.{js,ts}",
     "!<rootDir>/src/**/*.spec.{js,ts}",

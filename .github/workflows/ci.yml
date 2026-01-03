@@ -1,41 +1,98 @@
 name: Continue Integration
 
 on:
-  pull_request:
-    branches:
-      - master
+  workflow_call:
+    inputs:
+      runner:
+        description: 'Runner'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+      skip_if_fail:
+        type: boolean
+        default: true
 
 jobs:
   check-version:
     name: Check Version
+    if: ${{ startsWith(github.head_ref, 'release/') }}
     uses: ./.github/workflows/check-version.yml
     secrets: inherit
+    with:
+      runner: ${{ inputs.runner }}
 
   prepare:
     name: Prepare
     uses: ./.github/workflows/prepare.yml
     secrets: inherit
+    with:
+      runner: ${{ inputs.runner }}
 
   lint:
     name: Lint
     uses: ./.github/workflows/lint.yml
     secrets: inherit
     needs: [prepare]
+    with:
+      runner: ${{ inputs.runner }}
+
+  dependencies-scan:
+    name: Dependencies Scan
+    uses: ./.github/workflows/dependencies-scan.yml
+    secrets: inherit
+    needs: [prepare]
+    with:
+      runner: ${{ inputs.runner }}
 
   unit-test:
     name: Unit Test
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
     uses: ./.github/workflows/unit-test.yml
     secrets: inherit
-    needs: [prepare]
+    needs: [lint]
+    with:
+      runner: ${{ inputs.runner }}
 
   e2e-test:
     name: E2E Test
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
     uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
-    needs: [prepare]
+    needs: [lint]
+    with:
+      runner: ${{ inputs.runner }}
+
+  build-docker-image:
+    name: Build Docker Image
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
+    uses: ./.github/workflows/build-docker-image.yml
+    needs: [unit-test]
+    with:
+      runner: ${{ inputs.runner }}
 
   bvt-test:
     name: BVT Test
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
     uses: ./.github/workflows/bvt-test.yml
     secrets: inherit
-    needs: [prepare]
+    needs: [build-docker-image]
+    with:
+      runner: ${{ inputs.runner }}
+
+  docker-image-scan:
+    name: Docker Image Scan
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
+    uses: ./.github/workflows/docker-image-scan.yml
+    needs: [build-docker-image]
+    with:
+      runner: ${{ inputs.runner }}
+
+  publish-github-page:
+    name: Publish Artifacts to Github Page
+    # if: ${{ ((inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always())) && github.event_name != 'pull_request' }}
+    if: ${{ always() }}
+    uses: ./.github/workflows/publish-github-page.yml
+    secrets: inherit
+    needs: [bvt-test, docker-image-scan]
+    with:
+      runner: ${{ inputs.runner }}

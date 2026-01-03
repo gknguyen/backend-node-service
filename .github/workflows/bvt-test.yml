@@ -17,16 +17,17 @@ on:
         required: false
         default: 'latest'
 
+env:
+  TEST_REPORT_FOLDER: report-bvt-test
+
 jobs:
   bvt-test:
     runs-on: ['${{ inputs.runner }}']
     timeout-minutes: 5
 
-    if: github.event_name == 'pull_request'
-
     services:
       rabbitmq:
-        image: rabbitmq:latest
+        image: rabbitmq:4.0.9
         options: >-
           --name rabbitmq
           --health-cmd "rabbitmq-diagnostics check_port_connectivity"
@@ -36,30 +37,35 @@ jobs:
         ports:
           - 5672:5672
       zookeeper:
-        image: bitnami/zookeeper:latest
+        image: confluentinc/cp-zookeeper:7.4.3
         env:
-          ALLOW_ANONYMOUS_LOGIN: 'yes'
+          ZOOKEEPER_CLIENT_PORT: '2181'
+          ZOOKEEPER_TICK_TIME: '2000'
+          ZOOKEEPER_SYNC_LIMIT: '2'
         options: >-
           --name zookeeper
         ports:
           - 2181:2181
       kafka:
-        image: bitnami/kafka:3.9.0
+        image: confluentinc/cp-kafka:7.4.3
         env:
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
           ALLOW_PLAINTEXT_LISTENER: 'yes'
-          KAFKA_BROKER_ID: 1
-          KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT
-          KAFKA_CFG_LISTENERS: INTERNAL://kafka:29092,LOCAL://kafka:9092
-          KAFKA_CFG_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,LOCAL://localhost:9092
+          KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'
+          KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT
+          KAFKA_LISTENERS: INTERNAL://:29092,LOCAL://:9092
+          KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,LOCAL://localhost:9092
           KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-          KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
+          KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
         options: >-
           --name kafka
-          --health-cmd "kafka-topics.sh --bootstrap-server kafka:9092 --list || exit 1"
+          --health-cmd "kafka-topics --bootstrap-server localhost:29092 --list || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
         ports:
+          - 29092:29092
           - 9092:9092
       postgres:
         image: postgres:latest
@@ -93,39 +99,18 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-npm-
+            ${{ runner.os }}-
 
       - name: Install dependencies if cache missed
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm ci
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Cache Docker Build layers
-        uses: actions/cache@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
         with:
-          path: ${{ runner.temp }}/.buildx-cache
-          key: ${{ runner.os }}-docker-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-buildx-${{ github.sha }}-
-
-      - name: Create Docker Build
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          tags: ${{ inputs.imageName }}:${{ inputs.tag }}
-          push: false
-          cache-from: type=local,src=${{ runner.temp }}/.buildx-cache
-          cache-to: type=local,dest=${{ runner.temp }}/.buildx-cache-new,mode=max
-          outputs: type=docker,dest=/tmp/${{ inputs.imageName }}-${{ inputs.tag }}.tar
-          secrets: |
-            "npmrc=//npm.pkg.github.com/:_authToken=${{ secrets.GH_REGISTRY_PACKAGES }}"
-
-      # Temp fix: https://github.com/docker/build-push-action/issues/252
-      - name: Invalidate old Docker Build cache
-        run: |
-          rm -rf ${{ runner.temp }}/.buildx-cache
-          mv ${{ runner.temp }}/.buildx-cache-new ${{ runner.temp }}/.buildx-cache
+          name: ${{ inputs.imageName }}-${{ inputs.tag }}
+          path: /tmp
 
       - name: Load container dependencies
         run: |
@@ -175,11 +160,14 @@ jobs:
         if: ${{ always() }}
         with:
           name: BVT test report
-          path: report-bvt-test/*.xml
+          path: ${{ env.TEST_REPORT_FOLDER }}/*.xml
           reporter: jest-junit
 
-      - name: Cleanup Docker Builds
-        run: |
-          docker stop $(docker ps -q)
-          docker rm $(docker ps -a -q)
-          docker network rm backend-network
+      - name: Archive Test Reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-bvt-test
+          path: ${{ env.TEST_REPORT_FOLDER }}
+          retention-days: 1
+          include-hidden-files: false

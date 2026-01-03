@@ -1,0 +1,21 @@
+name: Push
+
+on:
+  push:
+    branches:
+      - master
+      - release/**
+
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+    with:
+      skip_if_fail: false
+
+  cd:
+    name: CD
+    uses: ./.github/workflows/cd.yml
+    secrets: inherit
+    needs: [ci]
