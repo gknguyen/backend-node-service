@@ -12,5 +12,5 @@ on:
 jobs:
   release-tag:
     name: Release Tag
-    uses: ./.github/workflows/shared/release-tag.yml
+    uses: ./.github/actions/release-tag.yml
     secrets: inherit

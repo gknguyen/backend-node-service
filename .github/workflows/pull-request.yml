@@ -9,13 +9,13 @@ on:
 jobs:
   ci:
     name: Continue Integration
-    uses: ./.github/workflows/actions/ci.yml
+    uses: ./.github/workflows/ci.yml
     secrets: inherit
 
   # test
   publish-github-page:
     name: Publish GitHub Page
     if: ${{ always() }}
-    uses: ./.github/workflows/shared/publish-github-page.yml
+    uses: ./.github/actions/publish-github-page.yml
     secrets: inherit
     needs: [ci]

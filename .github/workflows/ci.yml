@@ -12,50 +12,50 @@ on:
 jobs:
   check-version:
     name: Check Version
-    uses: ./.github/workflows/shared/check-version.yml
+    uses: ./.github/actions/check-version.yml
     secrets: inherit
 
   prepare:
     name: Prepare
-    uses: ./.github/workflows/shared/prepare.yml
+    uses: ./.github/actions/prepare.yml
     secrets: inherit
 
   lint:
     name: Lint
-    uses: ./.github/workflows/shared/lint.yml
+    uses: ./.github/actions/lint.yml
     secrets: inherit
     needs: [prepare]
 
   dependencies-scan:
     name: Dependencies Scan
-    uses: ./.github/workflows/shared/dependencies-scan.yml
+    uses: ./.github/actions/dependencies-scan.yml
     secrets: inherit
     needs: [prepare]
 
   unit-test:
     name: Unit Test
-    uses: ./.github/workflows/shared/unit-test.yml
+    uses: ./.github/actions/unit-test.yml
     secrets: inherit
     needs: [prepare]
 
   e2e-test:
     name: E2E Test
-    uses: ./.github/workflows/shared/e2e-test.yml
+    uses: ./.github/actions/e2e-test.yml
     secrets: inherit
     needs: [prepare]
 
   bvt-test:
     name: BVT Test
-    uses: ./.github/workflows/shared/bvt-test.yml
+    uses: ./.github/actions/bvt-test.yml
     secrets: inherit
     needs: [prepare]
 
   build-docker-image:
     name: Build Docker Image
-    uses: ./.github/workflows/shared/build-docker-image.yml
+    uses: ./.github/actions/build-docker-image.yml
     needs: [unit-test, e2e-test]
 
   docker-image-scan:
     name: Docker Image Scan
-    uses: ./.github/workflows/shared/docker-image-scan.yml
+    uses: ./.github/actions/docker-image-scan.yml
     needs: [build-docker-image]
