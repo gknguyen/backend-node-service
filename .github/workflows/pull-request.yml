@@ -11,11 +11,3 @@ jobs:
     name: Continue Integration
     uses: ./.github/workflows/ci.yml
     secrets: inherit
-
-  # test
-  publish-reports:
-    name: Publish Reports
-    if: ${{ always() }}
-    uses: ./.github/workflows/publish.yml
-    secrets: inherit
-    needs: [ci]

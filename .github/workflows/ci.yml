@@ -8,25 +8,28 @@ on:
         type: string
         required: false
         default: 'ubuntu-latest'
+      skip_if_fail:
+        type: boolean
+        default: true
 
 jobs:
   check-version:
     name: Check Version
-    uses: ./.github/actions/check-version.yml
+    uses: ./.github/workflows/check-version.yml
     secrets: inherit
     with:
       runner: ${{ inputs.runner }}
 
   prepare:
     name: Prepare
-    uses: ./.github/actions/prepare.yml
+    uses: ./.github/workflows/prepare.yml
     secrets: inherit
     with:
       runner: ${{ inputs.runner }}
 
   lint:
     name: Lint
-    uses: ./.github/actions/lint.yml
+    uses: ./.github/workflows/lint.yml
     secrets: inherit
     needs: [prepare]
     with:
@@ -34,7 +37,7 @@ jobs:
 
   dependencies-scan:
     name: Dependencies Scan
-    uses: ./.github/actions/dependencies-scan.yml
+    uses: ./.github/workflows/dependencies-scan.yml
     secrets: inherit
     needs: [prepare]
     with:
@@ -42,38 +45,52 @@ jobs:
 
   unit-test:
     name: Unit Test
-    uses: ./.github/actions/unit-test.yml
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
+    uses: ./.github/workflows/unit-test.yml
     secrets: inherit
-    needs: [prepare]
+    needs: [lint, dependencies-scan]
     with:
       runner: ${{ inputs.runner }}
 
   e2e-test:
     name: E2E Test
-    uses: ./.github/actions/e2e-test.yml
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
+    uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
-    needs: [prepare]
+    needs: [lint, dependencies-scan]
     with:
       runner: ${{ inputs.runner }}
 
   bvt-test:
     name: BVT Test
-    uses: ./.github/actions/bvt-test.yml
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
+    uses: ./.github/workflows/bvt-test.yml
     secrets: inherit
-    needs: [prepare]
+    needs: [lint, dependencies-scan]
     with:
       runner: ${{ inputs.runner }}
 
   build-docker-image:
     name: Build Docker Image
-    uses: ./.github/actions/build-docker-image.yml
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
+    uses: ./.github/workflows/build-docker-image.yml
     needs: [unit-test, e2e-test]
     with:
       runner: ${{ inputs.runner }}
 
   docker-image-scan:
     name: Docker Image Scan
-    uses: ./.github/actions/docker-image-scan.yml
+    if: ${{ (inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always()) }}
+    uses: ./.github/workflows/docker-image-scan.yml
     needs: [build-docker-image]
+    with:
+      runner: ${{ inputs.runner }}
+
+  publish-github-page:
+    name: Publish Artifacts to Github Page
+    if: ${{ ((inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always())) && github.event_name != 'pull_request' }}
+    uses: ./.github/workflows/publish-github-page.yml
+    secrets: inherit
+    needs: [docker-image-scan]
     with:
       runner: ${{ inputs.runner }}

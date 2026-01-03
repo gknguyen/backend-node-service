@@ -12,7 +12,7 @@ on:
 jobs:
   publish-github-page:
     name: Publish Artifacts to Github Page
-    uses: ./.github/actions/publish-github-page.yml
+    uses: ./.github/workflows/publish-github-page.yml
     secrets: inherit
     with:
       runner: ${{ inputs.runner }}

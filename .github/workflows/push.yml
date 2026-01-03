@@ -11,16 +11,11 @@ jobs:
     name: Continue Integration
     uses: ./.github/workflows/ci.yml
     secrets: inherit
+    with:
+      skip_if_fail: false
 
   cd:
     name: Continue Deployment
     uses: ./.github/workflows/cd.yml
-    secrets: inherit
-    needs: [ci]
-
-  publish-reports:
-    name: Publish Reports
-    if: ${{ always() }}
-    uses: ./.github/workflows/publish.yml
     secrets: inherit
     needs: [ci]
