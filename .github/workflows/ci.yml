@@ -89,8 +89,7 @@ jobs:
 
   publish-github-page:
     name: Publish Artifacts to Github Page
-    # if: ${{ ((inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always())) && github.event_name != 'pull_request' }}
-    if: ${{ always() }}
+    if: ${{ ((inputs.skip_if_fail && success()) || (!inputs.skip_if_fail && always())) && github.event_name != 'pull_request' }}
     uses: ./.github/workflows/publish-github-page.yml
     secrets: inherit
     needs: [bvt-test, docker-image-scan]
