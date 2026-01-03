@@ -57,11 +57,12 @@ jobs:
           KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
         options: >-
           --name kafka
-          --health-cmd "kafka-topics.sh --bootstrap-server kafka:9092 --list || exit 1"
+          --health-cmd "kafka-topics.sh --bootstrap-server localhost:29092 --list || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
         ports:
+          - 29092:29092
           - 9092:9092
       postgres:
         image: postgres:latest
