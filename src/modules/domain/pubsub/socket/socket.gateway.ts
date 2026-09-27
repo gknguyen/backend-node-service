@@ -21,7 +21,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('events')
-  handleEvent(client: Socket, data: any): void {
+  handleEvent(_client: Socket, data: any): void {
     this.server.emit('events', {
       name: 'GK',
       msg: data.msg,

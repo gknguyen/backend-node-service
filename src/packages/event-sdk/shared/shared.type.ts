@@ -24,3 +24,7 @@ export interface IRetryWithBackoffOptions {
   timeout: number;
   logger: Logger;
 }
+
+export interface IEventSdkAdmin {
+  healthCheck(): Promise<void>;
+}

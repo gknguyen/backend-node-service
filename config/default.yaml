@@ -35,6 +35,7 @@ rabbitmq:
 kafka:
   broker: 127.0.0.1:9092
   isCustomClient: false
+  allowAutoTopicCreation: true
 
 postgres:
   auth:

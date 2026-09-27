@@ -85,7 +85,7 @@ export function convertObject<T = IAnyObject>(obj: T, options: IConvertObjectOpt
 export function getObjectId(value?: string) {
   try {
     return new Types.ObjectId(value);
-  } catch (err) {
+  } catch (_) {
     return new Types.ObjectId();
   }
 }

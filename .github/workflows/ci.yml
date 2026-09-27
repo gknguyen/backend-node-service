@@ -4,10 +4,10 @@ on:
   workflow_call:
     inputs:
       runner:
-        description: 'Runner'
+        description: "Runner"
         type: string
         required: false
-        default: 'ubuntu-latest'
+        default: "ubuntu-latest"
       skip_if_fail:
         type: boolean
         default: true

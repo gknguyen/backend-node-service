@@ -1,7 +1,7 @@
 import { KafkaContainer } from '@testcontainers/kafka';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { RabbitMQContainer } from '@testcontainers/rabbitmq';
-import { promisify } from 'util';
+import { promisify } from 'node:util';
 import { MongoMemoryReplSet } from 'mongodb-memory-server';
 
 export const wait = promisify(setTimeout);
@@ -10,6 +10,11 @@ export async function initKafkaInstance(): Promise<void> {
   /** use image "confluentinc/cp-kafka" */
   const kafkaContainer = await new KafkaContainer()
     .withName('kafka')
+    .withEnvironment({
+      KAFKA_BROKER_ID: '1',
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1',
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true',
+    })
     .withExposedPorts(9092)
     .start();
 

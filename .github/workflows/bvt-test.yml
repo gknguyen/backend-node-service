@@ -4,25 +4,25 @@ on:
   workflow_call:
     inputs:
       runner:
-        description: 'Runner'
+        description: "Runner"
         type: string
         required: false
-        default: 'ubuntu-latest'
+        default: "ubuntu-latest"
       imageName:
         type: string
         required: false
-        default: 'backend-node-service'
+        default: "backend-node-service"
       tag:
         type: string
         required: false
-        default: 'latest'
+        default: "latest"
 
 env:
   TEST_REPORT_FOLDER: report-bvt-test
 
 jobs:
   bvt-test:
-    runs-on: ['${{ inputs.runner }}']
+    runs-on: ["${{ inputs.runner }}"]
     timeout-minutes: 5
 
     services:
@@ -39,9 +39,9 @@ jobs:
       zookeeper:
         image: confluentinc/cp-zookeeper:7.4.3
         env:
-          ZOOKEEPER_CLIENT_PORT: '2181'
-          ZOOKEEPER_TICK_TIME: '2000'
-          ZOOKEEPER_SYNC_LIMIT: '2'
+          ZOOKEEPER_CLIENT_PORT: "2181"
+          ZOOKEEPER_TICK_TIME: "2000"
+          ZOOKEEPER_SYNC_LIMIT: "2"
         options: >-
           --name zookeeper
         ports:
@@ -50,14 +50,14 @@ jobs:
         image: confluentinc/cp-kafka:7.4.3
         env:
           KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-          ALLOW_PLAINTEXT_LISTENER: 'yes'
-          KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'
+          ALLOW_PLAINTEXT_LISTENER: "yes"
+          KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
           KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,LOCAL:PLAINTEXT
           KAFKA_LISTENERS: INTERNAL://:29092,LOCAL://:9092
           KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,LOCAL://localhost:9092
           KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
-          KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+          KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
         options: >-
           --name kafka
           --health-cmd "kafka-topics --bootstrap-server localhost:29092 --list || exit 1"
@@ -89,7 +89,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'package.json'
+          node-version-file: "package.json"
 
       - name: Restore cached node_modules
         uses: actions/cache@v4

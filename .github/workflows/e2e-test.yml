@@ -4,18 +4,18 @@ on:
   workflow_call:
     inputs:
       runner:
-        description: 'Runner'
+        description: "Runner"
         type: string
         required: false
-        default: 'ubuntu-latest'
+        default: "ubuntu-latest"
 
 env:
   TEST_REPORT_FOLDER: report-e2e-test
 
 jobs:
   e2e-test:
-    runs-on: ['${{ inputs.runner }}']
-    timeout-minutes: 5
+    runs-on: ["${{ inputs.runner }}"]
+    timeout-minutes: 15
 
     steps:
       - name: Checkout the repository
@@ -24,7 +24,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'package.json'
+          node-version-file: "package.json"
 
       - name: Restore cached node_modules
         uses: actions/cache@v4

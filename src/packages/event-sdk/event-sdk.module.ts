@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { MetadataScanner } from '@nestjs/core';
 import {
+  EVENT_SDK_ADMIN_TOKEN,
   EVENT_SDK_CONSUMER_TOKEN,
   EVENT_SDK_OPTIONS,
   EVENT_SDK_PRODUCER_TOKEN,
@@ -11,6 +12,7 @@ import { KafkaJSProducer } from './kafkajs/kafkajs.producer';
 import { getKafkaJsProvider } from './kafkajs/kafkajs.provider';
 import { RdKafkaConsumer } from './rdkafka/rdkafka.consumer';
 import { RdKafkaProducer } from './rdkafka/rdkafka.producer';
+import { KafkaJSAdmin } from './kafkajs/kafkajs.admin';
 
 @Module({})
 export class EventSdkModule {
@@ -28,8 +30,9 @@ export class EventSdkModule {
         { provide: EVENT_SDK_OPTIONS, useValue: options },
         { provide: EVENT_SDK_PRODUCER_TOKEN, useClass: KafkaJSProducer },
         { provide: EVENT_SDK_CONSUMER_TOKEN, useClass: KafkaJSConsumer },
+        { provide: EVENT_SDK_ADMIN_TOKEN, useClass: KafkaJSAdmin },
       ],
-      exports: [EVENT_SDK_PRODUCER_TOKEN, EVENT_SDK_CONSUMER_TOKEN],
+      exports: [EVENT_SDK_PRODUCER_TOKEN, EVENT_SDK_CONSUMER_TOKEN, EVENT_SDK_ADMIN_TOKEN],
     };
   }
 

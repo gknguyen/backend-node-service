@@ -16,14 +16,14 @@ export function getKafkaOptions() {
     },
     consumer: {
       groupId: SERVICE_NAME,
-      allowAutoTopicCreation: true,
+      allowAutoTopicCreation: ENV.KAFKA.ALLOW_AUTO_TOPIC_CREATION,
     },
     send: {
       timeout: 30_000,
       compression: CompressionTypes.GZIP,
     },
     run: {
-      partitionsConsumedConcurrently: 3,
+      partitionsConsumedConcurrently: 2,
     },
     subscribe: {
       fromBeginning: false,
@@ -74,7 +74,7 @@ export function getKafkaCustomOptionsV2(): IRdKafka.IEventSdkOptions {
       'metadata.broker.list': ENV.KAFKA.BROKER,
       'socket.timeout.ms': 30_000,
       'socket.connection.setup.timeout.ms': 10_000,
-      'allow.auto.create.topics': true,
+      'allow.auto.create.topics': ENV.KAFKA.ALLOW_AUTO_TOPIC_CREATION,
       'retry.backoff.ms': 300,
       'reconnect.backoff.max.ms': 30_000,
     },
