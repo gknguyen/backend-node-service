@@ -27,8 +27,9 @@ export class WinstonLogger implements IBaseLogger {
         format((info) => {
           const censorKeys = options?.redact?.paths || DEFAULT_REDACT_OPTIONS.paths;
           censorKeys.forEach((key) => {
-            if (info.data && Object.keys(info.data).includes(key))
-              info.data[key] = options?.redact?.censor ?? DEFAULT_REDACT_OPTIONS.censor;
+            const data = info.data as Record<string, unknown> | undefined;
+            if (data && Object.keys(data).includes(key))
+              data[key] = options?.redact?.censor ?? DEFAULT_REDACT_OPTIONS.censor;
           });
           return info;
         })(),

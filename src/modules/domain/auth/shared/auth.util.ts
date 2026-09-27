@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs';
-import { decode, sign } from 'jsonwebtoken';
+import { decode, sign, SignOptions } from 'jsonwebtoken';
 import { isString } from 'lodash';
 import ENV from 'src/shared/env';
 import { IAccessTokenPayload } from './auth.interface';
@@ -15,7 +15,10 @@ export function verifyEncodedPassword(pass: string, hashed: string) {
 }
 
 /** https://github.com/auth0/node-jsonwebtoken/issues/927 */
-export function getAccessToken(payload: IAccessTokenPayload, expiresIn = ENV.JWT.EXPIRES_IN) {
+export function getAccessToken(
+  payload: IAccessTokenPayload,
+  expiresIn: SignOptions['expiresIn'] = ENV.JWT.EXPIRES_IN as SignOptions['expiresIn'],
+) {
   return sign(payload, ENV.JWT.SECRET, { expiresIn });
 }
 
