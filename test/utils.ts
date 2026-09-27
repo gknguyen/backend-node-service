@@ -1,7 +1,7 @@
 import { KafkaContainer } from '@testcontainers/kafka';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { RabbitMQContainer } from '@testcontainers/rabbitmq';
-import { promisify } from 'util';
+import { promisify } from 'node:util';
 import { MongoMemoryReplSet } from 'mongodb-memory-server';
 
 export const wait = promisify(setTimeout);
