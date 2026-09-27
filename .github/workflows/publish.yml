@@ -1,4 +1,4 @@
-name: Continue Deployment
+name: Publish Reports
 
 on:
   workflow_call:
@@ -10,9 +10,9 @@ on:
         default: 'ubuntu-latest'
 
 jobs:
-  release-tag:
-    name: Release Tag
-    uses: ./.github/workflows/release-tag.yml
+  publish-github-page:
+    name: Publish Artifacts to Github Page
+    uses: ./.github/workflows/publish-github-page.yml
     secrets: inherit
     with:
       runner: ${{ inputs.runner }}

@@ -29,12 +29,33 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Cache Docker Build layers
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/.buildx-cache
+          key: ${{ runner.os }}-docker_buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker_buildx-${{ github.sha }}-
+            ${{ runner.os }}-docker_buildx
+            ${{ runner.os }}-
+
       - name: Build and export
         uses: docker/build-push-action@v5
         with:
           context: .
           tags: ${{ inputs.imageName }}:${{ inputs.tag }}
+          push: false
+          cache-from: type=local,src=${{ runner.temp }}/.buildx-cache
+          cache-to: type=local,dest=${{ runner.temp }}/.buildx-cache-new,mode=max
           outputs: type=docker,dest=/tmp/${{ inputs.imageName }}-${{ inputs.tag }}.tar
+          secrets: |
+            "npmrc=//npm.pkg.github.com/:_authToken=${{ secrets.GH_REGISTRY_PACKAGES }}"
+
+      # Temp fix: https://github.com/docker/build-push-action/issues/252
+      - name: Invalidate old Docker Build cache
+        run: |
+          rm -rf ${{ runner.temp }}/.buildx-cache
+          mv ${{ runner.temp }}/.buildx-cache-new ${{ runner.temp }}/.buildx-cache
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

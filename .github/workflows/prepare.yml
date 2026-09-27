@@ -14,8 +14,6 @@ jobs:
     runs-on: ['${{ inputs.runner }}']
     timeout-minutes: 5
 
-    if: github.event_name == 'pull_request'
-
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -35,6 +33,8 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-npm-
+            ${{ runner.os }}-
 
       - name: Install dependencies if cache missed
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
